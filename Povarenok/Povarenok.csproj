@@ -97,6 +97,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Rene Bieder  Milliard Book.otf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

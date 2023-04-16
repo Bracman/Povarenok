@@ -8,11 +8,11 @@
         Title="CashierPanel" Height="800" Width="1200">
     <Grid Background="#FFE1D5C9">
         <TabControl HorizontalAlignment="Left" TabStripPlacement="Left" Height="800" VerticalAlignment="Top" Width="1200">
-            <TabItem Header="TabItem" Width="200" Height="100">
-                <Grid Background="#FFE5E5E5" Margin="0,0,-8,-411"/>
+            <TabItem Header="Блюда" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" Margin="-5,-4,0,4">
+                <Grid Background="#FFF7F0EA" Margin="0,0,-8,-411"/>
             </TabItem>
-            <TabItem Header="TabItem" Width="200" Height="100">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="Заказ клиента" Width="201" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" FontWeight="Bold" Margin="-1,-6,1,6">
+                <Grid Background="#FFF7F0EA"/>
             </TabItem>
         </TabControl>
 
