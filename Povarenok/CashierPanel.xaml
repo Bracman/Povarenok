@@ -9,7 +9,20 @@
     <Grid Background="#FFE1D5C9">
         <TabControl HorizontalAlignment="Left" TabStripPlacement="Left" Height="800" VerticalAlignment="Top" Width="1200">
             <TabItem Header="Блюда" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" Margin="-5,-4,0,4">
-                <Grid Background="#FFF7F0EA" Margin="0,0,-8,-411"/>
+                <Grid Background="#FFF7F0EA" Margin="0,0,-8,-411">
+                    <DataGrid HorizontalAlignment="Left" Height="670" Margin="34,21,0,0" VerticalAlignment="Top" Width="715"/>
+                    <GroupBox Header="Поиск" HorizontalAlignment="Left" Height="485" Margin="763,3,0,0" VerticalAlignment="Top" Width="205" BorderBrush="#FF0B0B0C">
+                        <Grid HorizontalAlignment="Left" Height="437" Margin="10,10,-2,0" VerticalAlignment="Top" Width="185">
+                            <RadioButton Content="Блюд" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                            <RadioButton Content="Продуктов" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                            <ListBox HorizontalAlignment="Left" Height="275" Margin="0,119,0,0" VerticalAlignment="Top"  VerticalContentAlignment="Center" Width="175">
+                                <CheckBox VerticalContentAlignment="Center" Content="Суп"/>
+                                <CheckBox Content="Картошка"/>
+                            </ListBox>
+
+                        </Grid>
+                    </GroupBox>
+                </Grid>
             </TabItem>
             <TabItem Header="Заказ клиента" Width="201" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" FontWeight="Bold" Margin="-1,-6,1,6">
                 <Grid Background="#FFF7F0EA"/>
