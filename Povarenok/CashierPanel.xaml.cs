@@ -101,11 +101,8 @@ namespace Povarenok
             {
                 message += passage.nameProduct + ",";
             }
-            MessageBox.Show(message);
-
-            DataTable dataTable = new DataTable();
-                        
-            dataTable.Rows.Clear();
+            DataTable dataTable = new DataTable();                     
+           
             ConnectionDataBase dataBase = new ConnectionDataBase();
             dataTable = dataBase.StoredProcedure("find_dishes","input", message);
             dataGrid.ItemsSource = dataTable.DefaultView;

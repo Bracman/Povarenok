@@ -75,7 +75,7 @@ namespace Povarenok
                 mySqlComm.CommandType = CommandType.StoredProcedure;
                 mySqlComm.Parameters.AddWithValue(nameParametr,nameValue);
                 mySqlComm.Connection.Open();
-                mySqlComm.ExecuteReader();
+                mySqlComm.ExecuteNonQuery();
                 myadapter.SelectCommand = mySqlComm;
                 myadapter.Fill(table);
 
