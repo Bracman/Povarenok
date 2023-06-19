@@ -23,8 +23,11 @@ namespace Povarenok
     {
         public CashierPanel()
         {
-            InitializeComponent();           
-           
+            InitializeComponent();
+
+            labelTypeDish.IsEnabled = false;
+            comboxTypeDish.IsEnabled = false;
+            loadTypeofDish();
         }
 
         private IList<Product> products = new List<Product>();
@@ -34,8 +37,8 @@ namespace Povarenok
         {
             try
             {
+                products.Clear();
                 DataTable dataTable = new DataTable();
-
                 dataTable.Rows.Clear();
                 ConnectionDataBase dataBase = new ConnectionDataBase();
                 dataTable = dataBase.StoredProcedureNotParametr("selectProducts");
@@ -48,9 +51,8 @@ namespace Povarenok
                     });
 
                 }
+                listDates.ItemsSource = null;
                 listDates.ItemsSource = products;        
-
-                
 
             }
             catch (Exception x)
@@ -64,32 +66,25 @@ namespace Povarenok
             public string nameProduct { get; set; }
             public bool IsSelected { get; set; }
         }
-
-      
-        public void addColumnDataGrid(string [] headers)
-        {
-            dataGrid.Columns.Clear();
-            foreach (string header in headers)
-            {
-                DataGridTextColumn c = new DataGridTextColumn();
-                c.Header = header;
-                dataGrid.AutoGenerateColumns = false;
-                dataGrid.CanUserResizeColumns = false;
-                dataGrid.CanUserResizeRows = false;
-                dataGrid.Columns.Add(c);
-                
-               
-            }
-        }
+         
+        
 
         private void DishRadioButton_Checked(object sender, RoutedEventArgs e)
         {
             loadProducts();
-            
+            datagridProduct.Visibility = Visibility.Hidden;
+            dataGrid.Visibility = Visibility.Visible;
+            labelTypeDish.IsEnabled = false;
+            comboxTypeDish.IsEnabled = false;
+            activateSearch.IsEnabled = true;
         }
 
         private void ProductRadioButton_Checked(object sender, RoutedEventArgs e)
         {
+            datagridProduct.Visibility = Visibility.Visible;
+            dataGrid.Visibility = Visibility.Hidden;
+            labelTypeDish.IsEnabled = true;
+            comboxTypeDish.IsEnabled = true;
             
         }
 
@@ -101,13 +96,82 @@ namespace Povarenok
             {
                 message += passage.nameProduct + ",";
             }
-            DataTable dataTable = new DataTable();                     
+            DataTable dataTable = new DataTable(); 
+            
+            if(DishRadioButton.IsChecked==true)
+            {
+                ConnectionDataBase dataBase = new ConnectionDataBase();
+                dataTable = dataBase.StoredProcedure("find_dishes", "input", message);
+                dataGrid.ItemsSource = dataTable.DefaultView;
+            }
+            if (ProductRadioButton.IsChecked==true)
+            {
+                ConnectionDataBase dataBase = new ConnectionDataBase();
+                dataTable = dataBase.StoredProcedure("withdrawProducts", "dish", message);
+                datagridProduct.ItemsSource = dataTable.DefaultView;
+            }
            
-            ConnectionDataBase dataBase = new ConnectionDataBase();
-            dataTable = dataBase.StoredProcedure("find_dishes","input", message);
-            dataGrid.ItemsSource = dataTable.DefaultView;
+            
 
 
+        }
+        
+        public void loadTypeofDish()
+        {
+            try
+            {
+                DataTable dataTable = new DataTable();
+
+                dataTable.Rows.Clear();
+                ConnectionDataBase dataBase = new ConnectionDataBase();
+                dataTable = dataBase.StoredProcedureNotParametr("selectTypeDish");
+
+                comboxTypeDish.ItemsSource = dataTable.DefaultView;
+                comboxTypeDish.DisplayMemberPath = "nameTypeDish";
+                comboxTypeDish.SelectedValuePath = "codeTypeDish";
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.GetBaseException().ToString(), "Error",
+                           MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+
+        }
+
+        private void comboxTypeDish_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                products.Clear();
+                DataRowView oDataRowView = comboxTypeDish.SelectedItem as DataRowView;
+                if (oDataRowView != null)     
+                   
+                {
+                    DataTable dataTable = new DataTable();
+                    dataTable.Rows.Clear();
+                    ConnectionDataBase dataBase = new ConnectionDataBase();
+                    dataTable = dataBase.StoredProcedure("selectDish", "namet", oDataRowView.Row["nameTypeDish"].ToString());
+
+                    
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        products.Add(new Product
+                        {
+                            nameProduct = dr[0].ToString()
+                        });
+
+                    }
+                    listDates.ItemsSource = null;
+                    listDates.ItemsSource = products;
+                }                           
+
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.GetBaseException().ToString(), "Error",
+                           MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

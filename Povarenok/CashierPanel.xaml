@@ -10,11 +10,11 @@
         <TabControl HorizontalAlignment="Left" TabStripPlacement="Left" Height="800" VerticalAlignment="Top" Width="1200">
             <TabItem Header="Блюда" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" Margin="-5,-4,0,4">
                 <Grid Background="#FFF7F0EA" Margin="0,0,-8,22">
-                    <GroupBox Header="Поиск" HorizontalAlignment="Left" Height="688" Margin="699,3,0,0" VerticalAlignment="Top" Width="269" BorderBrush="#FF0B0B0C">
-                        <Grid HorizontalAlignment="Left" Height="634" Margin="10,10,-2,0" VerticalAlignment="Top" Width="249">
+                    <GroupBox Header="Поиск" HorizontalAlignment="Left" Height="739" Margin="699,3,0,0" VerticalAlignment="Top" Width="269" BorderBrush="#FF0B0B0C">
+                        <Grid HorizontalAlignment="Left" Height="689" Margin="10,10,-2,0" VerticalAlignment="Top" Width="249">
                             <RadioButton Name="DishRadioButton" Content="Блюд" ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="5000" ToolTipService.BetweenShowDelay="10000" ToolTip="Поиск блюд из выбранных продуктов" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Checked="DishRadioButton_Checked"/>
                             <RadioButton  Name="ProductRadioButton" Content="Продуктов" HorizontalAlignment="Left" ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="5000" ToolTipService.BetweenShowDelay="10000" ToolTip="Выводит продукты, которые входят в выбранные блюда" Margin="10,43,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Checked="ProductRadioButton_Checked"/>
-                            <ListBox  Name="listDates" ItemsSource="{Binding products}" HorizontalAlignment="Left" Height="450" Margin="0,119,-49,-132" VerticalAlignment="Top"  VerticalContentAlignment="Center" Width="234" FontSize="14">
+                            <ListBox  Name="listDates" ItemsSource="{Binding products, Mode=TwoWay}" HorizontalAlignment="Left" Height="450" Margin="2,169,0,0" VerticalAlignment="Top"  VerticalContentAlignment="Center" Width="234" FontSize="14">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>
@@ -25,7 +25,9 @@
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                            <Button Name="activateSearch" Content="Найти" HorizontalAlignment="Left" Margin="34,591,0,0" VerticalAlignment="Top" Width="185" Click="activateSearch_Click"/>
+                            <Button Name="activateSearch" Content="Найти" HorizontalAlignment="Left" Margin="34,639,0,0" VerticalAlignment="Top" Width="185" Click="activateSearch_Click"/>
+                            <Label Name="labelTypeDish" Content="Вид блюда" HorizontalAlignment="Left" Margin="16,78,0,0" VerticalAlignment="Top"/>
+                            <ComboBox Name="comboxTypeDish" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" Width="226" SelectionChanged="comboxTypeDish_SelectionChanged"/>
 
                         </Grid>
                     </GroupBox>
@@ -34,6 +36,12 @@
                             <DataGridTextColumn Header="Наименование блюда" Width="*"  Binding="{Binding nameDish }" />
                             <DataGridTextColumn Header="Цена" Width="*" Binding="{Binding priceDish }" />
                             <DataGridTextColumn Header="Вес блюда" Width="*" Binding="{Binding dishWeight}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid Name="datagridProduct"  CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="710" Margin="39,32,0,0" VerticalAlignment="Top" Width="630">
+                        <DataGrid.Columns >
+                            <DataGridTextColumn Header="Наименование продукта" Width="*"  Binding="{Binding nameProduct }" />
+                            <DataGridTextColumn Header="Количество продукта (грамм)" Width="*" Binding="{Binding productWeight}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
