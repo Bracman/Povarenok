@@ -47,7 +47,7 @@ namespace Povarenok
                 {
                     products.Add(new Product
                     {
-                        nameProduct = dr[0].ToString()
+                        inputDates = dr[0].ToString()
                     });
 
                 }
@@ -63,7 +63,7 @@ namespace Povarenok
         }
         public class Product
         {
-            public string nameProduct { get; set; }
+            public string inputDates { get; set; }
             public bool IsSelected { get; set; }
         }
          
@@ -94,7 +94,7 @@ namespace Povarenok
             string message="";
             foreach (var passage in selectedPassages)
             {
-                message += passage.nameProduct + ",";
+                message += passage.inputDates + ",";
             }
             DataTable dataTable = new DataTable(); 
             
@@ -158,7 +158,7 @@ namespace Povarenok
                     {
                         products.Add(new Product
                         {
-                            nameProduct = dr[0].ToString()
+                            inputDates = dr[0].ToString()
                         });
 
                     }
