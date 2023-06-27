@@ -48,9 +48,9 @@
             </TabItem>
             <TabItem Header="Заказ клиента" Width="201" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" FontWeight="Bold" Margin="-1,-6,1,6">
                 <Grid Background="#FFF7F0EA" Margin="0,0,0,25">
-                    <DataGrid HorizontalAlignment="Left" Height="710" Margin="25,10,0,0" VerticalAlignment="Top" Width="630">
+                    <DataGrid Name="datagridOrder" HorizontalAlignment="Left" Height="710" Margin="25,10,0,0" VerticalAlignment="Top" Width="630">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Наименование блюда"  Width="*"  Binding="{Binding orderedDish }">
+                            <DataGridTextColumn Header="Наименование блюда"  Width="*"  Binding="{Binding nameDish }">
                                 <DataGridTextColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
                                         <Setter Property="HorizontalContentAlignment"  Value="Center" />
@@ -75,13 +75,18 @@
                     </DataGrid>
                     <GroupBox Header="Блюда" HorizontalAlignment="Left" Height="706" Margin="681,12,0,0" VerticalAlignment="Top" Width="275" BorderBrush="#FF0B0B0C">
                         <Grid Background="#FFF7F0EA" >
-                            <ComboBox HorizontalAlignment="Left" Margin="33,67,0,0" VerticalAlignment="Top" Width="180" Height="30"/>
-                            <ListBox HorizontalAlignment="Left" Height="470" Margin="27,120,0,0" VerticalAlignment="Top" Width="215">
+                            <ComboBox Name="comboxTypeOfDishOrderClient" HorizontalAlignment="Left" Margin="33,67,0,0" VerticalAlignment="Top" Width="180" Height="30"/>
+                            <ListBox Name="listBoxOrderDish"  HorizontalAlignment="Left" Height="470" Margin="27,120,0,0" VerticalAlignment="Top" Width="215" PreviewMouseLeftButtonDown="listBoxOrderDish_PreviewMouseLeftButtonDown">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="listBoxOrderDish_PreviewMouseLeftButtonDown"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>
                                             <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-                                                <Button Name="buttonDish" Content="{Binding nameDishOrder}"  VerticalContentAlignment="Center"/>
+                                                <TextBlock Text="{Binding inputDates}" VerticalAlignment="Center"/>
                                             </ScrollViewer>
                                         </StackPanel>
                                     </DataTemplate>

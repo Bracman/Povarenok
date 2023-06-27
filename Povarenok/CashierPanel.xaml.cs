@@ -28,16 +28,17 @@ namespace Povarenok
             labelTypeDish.IsEnabled = false;
             comboxTypeDish.IsEnabled = false;
             loadTypeofDish();
+            loadDishes();
         }
 
-        private IList<Product> products = new List<Product>();
+        private IList<Dates> dates = new List<Dates>();
 
 
         public void  loadProducts()
         {
             try
             {
-                products.Clear();
+                dates.Clear();
                 DataTable dataTable = new DataTable();
                 dataTable.Rows.Clear();
                 ConnectionDataBase dataBase = new ConnectionDataBase();
@@ -45,14 +46,14 @@ namespace Povarenok
                
                 foreach (DataRow dr in dataTable.Rows)
                 {
-                    products.Add(new Product
+                    dates.Add(new Dates
                     {
                         inputDates = dr[0].ToString()
                     });
 
                 }
                 listDates.ItemsSource = null;
-                listDates.ItemsSource = products;        
+                listDates.ItemsSource = dates;        
 
             }
             catch (Exception x)
@@ -61,7 +62,7 @@ namespace Povarenok
                            MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        public class Product
+        public class Dates
         {
             public string inputDates { get; set; }
             public bool IsSelected { get; set; }
@@ -90,7 +91,7 @@ namespace Povarenok
 
         private void activateSearch_Click(object sender, RoutedEventArgs e)
         {
-            var selectedPassages = products.Where(ps => ps.IsSelected == true).ToList();
+            var selectedPassages = dates.Where(ps => ps.IsSelected == true).ToList();
             string message="";
             foreach (var passage in selectedPassages)
             {
@@ -129,6 +130,10 @@ namespace Povarenok
                 comboxTypeDish.ItemsSource = dataTable.DefaultView;
                 comboxTypeDish.DisplayMemberPath = "nameTypeDish";
                 comboxTypeDish.SelectedValuePath = "codeTypeDish";
+
+                comboxTypeOfDishOrderClient.ItemsSource = dataTable.DefaultView;
+                comboxTypeOfDishOrderClient.DisplayMemberPath = "nameTypeDish";
+                comboxTypeOfDishOrderClient.SelectedValuePath = "codeTypeDish";
             }
             catch (Exception x)
             {
@@ -143,7 +148,7 @@ namespace Povarenok
         {
             try
             {
-                products.Clear();
+                dates.Clear();
                 DataRowView oDataRowView = comboxTypeDish.SelectedItem as DataRowView;
                 if (oDataRowView != null)     
                    
@@ -156,14 +161,14 @@ namespace Povarenok
                     
                     foreach (DataRow dr in dataTable.Rows)
                     {
-                        products.Add(new Product
+                        dates.Add(new Dates
                         {
                             inputDates = dr[0].ToString()
                         });
 
                     }
                     listDates.ItemsSource = null;
-                    listDates.ItemsSource = products;
+                    listDates.ItemsSource = dates;
                 }                           
 
             }
@@ -172,6 +177,43 @@ namespace Povarenok
                 MessageBox.Show(x.GetBaseException().ToString(), "Error",
                            MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        public void loadDishes()
+        {
+            try
+            {
+                dates.Clear();
+                DataTable dataTable = new DataTable();
+                dataTable.Rows.Clear();
+                ConnectionDataBase dataBase = new ConnectionDataBase();
+                dataTable = dataBase.StoredProcedureNotParametr("loadDishes");
+
+                foreach (DataRow dr in dataTable.Rows)
+                {
+                    dates.Add(new Dates
+                    {
+                        inputDates = dr[0].ToString()
+                    });
+
+                }
+                listBoxOrderDish.ItemsSource = null;
+                listBoxOrderDish.ItemsSource = dates;
+
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.GetBaseException().ToString(), "Error",
+                           MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void listBoxOrderDish_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem listBoxItem = (ListBoxItem)sender;
+            String selectedItem = (String)listBoxItem.DataContext;
+
+            // Добавьте выбранный элемент в DataGrid
+            datagridOrder.Items.Add(selectedItem);
         }
     }
 }
