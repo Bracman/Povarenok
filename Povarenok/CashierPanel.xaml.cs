@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Collections.ObjectModel;
 
 namespace Povarenok
 {
@@ -21,6 +22,15 @@ namespace Povarenok
     /// </summary>
     public partial class CashierPanel : Window
     {
+       public class DishDataSet
+        {
+            public string nameDishDataSet { get; set; }
+            public int countDishDataSet { get; set; }
+            public string priceDishDataSet { get; set; }
+        }
+
+        public ObservableCollection<DishDataSet> DishDataSets { get; } = new ObservableCollection<DishDataSet>();
+
         public CashierPanel()
         {
             InitializeComponent();
@@ -29,11 +39,14 @@ namespace Povarenok
             comboxTypeDish.IsEnabled = false;
             loadTypeofDish();
             loadDishes();
+            datagridOrder.ItemsSource = DishDataSets;
         }
 
         private IList<Dates> dates = new List<Dates>();
 
+        private IList<MenuDishes> menuDishes = new List<MenuDishes>();
 
+        
         public void  loadProducts()
         {
             try
@@ -67,8 +80,14 @@ namespace Povarenok
             public string inputDates { get; set; }
             public bool IsSelected { get; set; }
         }
-         
-        
+
+        public class MenuDishes
+        {
+            public string nameDish { get; set; }
+            public string priceDish { get; set; }
+        }
+       
+       
 
         private void DishRadioButton_Checked(object sender, RoutedEventArgs e)
         {
@@ -111,10 +130,6 @@ namespace Povarenok
                 dataTable = dataBase.StoredProcedure("withdrawProducts", "dish", message);
                 datagridProduct.ItemsSource = dataTable.DefaultView;
             }
-           
-            
-
-
         }
         
         public void loadTypeofDish()
@@ -157,7 +172,6 @@ namespace Povarenok
                     dataTable.Rows.Clear();
                     ConnectionDataBase dataBase = new ConnectionDataBase();
                     dataTable = dataBase.StoredProcedure("selectDish", "namet", oDataRowView.Row["nameTypeDish"].ToString());
-
                     
                     foreach (DataRow dr in dataTable.Rows)
                     {
@@ -182,7 +196,7 @@ namespace Povarenok
         {
             try
             {
-                dates.Clear();
+                menuDishes.Clear();
                 DataTable dataTable = new DataTable();
                 dataTable.Rows.Clear();
                 ConnectionDataBase dataBase = new ConnectionDataBase();
@@ -190,14 +204,15 @@ namespace Povarenok
 
                 foreach (DataRow dr in dataTable.Rows)
                 {
-                    dates.Add(new Dates
+                    menuDishes.Add(new MenuDishes
                     {
-                        inputDates = dr[0].ToString()
-                    });
+                        nameDish = dr[0].ToString(),
+                        priceDish = dr[1].ToString()
+                    }); 
 
                 }
                 listBoxOrderDish.ItemsSource = null;
-                listBoxOrderDish.ItemsSource = dates;
+                listBoxOrderDish.ItemsSource = menuDishes;
 
             }
             catch (Exception x)
@@ -205,15 +220,43 @@ namespace Povarenok
                 MessageBox.Show(x.GetBaseException().ToString(), "Error",
                            MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
+        }       
 
-        private void listBoxOrderDish_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void listBoxMenu_Click(object sender, RoutedEventArgs e)
         {
-            ListBoxItem listBoxItem = (ListBoxItem)sender;
-            String selectedItem = (String)listBoxItem.DataContext;
+            Button clickedButton = (Button)sender;
+            var existingItem = DishDataSets.FirstOrDefault(item => item.nameDishDataSet == clickedButton.Content.ToString());
+            if (existingItem != null)
+            {
+                if (existingItem.countDishDataSet <2)
+                {
+                    // Увеличиваем значение второго столбца
+                    existingItem.countDishDataSet++;
+                    CollectionViewSource.GetDefaultView(DishDataSets).Refresh();
+                }
+                else
+                {
+                    // Показываем сообщение с предупреждением
+                    MessageBox.Show("Нельзя добавить больше двух порций.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                // Создание нового объекта MyDataItem и добавление его в коллекцию MyData
+                DishDataSet dataSet = new DishDataSet { nameDishDataSet = clickedButton.Content.ToString(), countDishDataSet = 1 };
+                DishDataSets.Add(dataSet);
+            }
+        }
+        private void listBoxOrderDish_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedDate = listBoxOrderDish.SelectedItem as Dates;
 
-            // Добавьте выбранный элемент в DataGrid
-            datagridOrder.Items.Add(selectedItem);
+            if (selectedDate != null)
+            {
+                datagridOrder.Items.Add(selectedDate);
+            }
+
+            ((ListBox)sender).SelectedItem = null;
         }
     }
 }
