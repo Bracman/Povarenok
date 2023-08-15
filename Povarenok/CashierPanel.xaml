@@ -48,7 +48,7 @@
             </TabItem>
             <TabItem Header="Заказ клиента" Width="201" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" FontWeight="Bold" Margin="-1,-6,1,6">
                 <Grid Background="#FFF7F0EA" Margin="0,0,0,25">
-                    <DataGrid Name="datagridOrder" HorizontalAlignment="Left" Height="469" Margin="11,8,0,0" AutoGenerateColumns="False" VerticalAlignment="Top" Width="623">
+                    <DataGrid Name="datagridOrder" HorizontalAlignment="Left" Height="423" Margin="11,54,0,0" AutoGenerateColumns="False" CanUserAddRows="False"  VerticalAlignment="Top" Width="623" PreviewKeyDown="datagridOrder_PreviewKeyDown">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Наименование блюда"  Width="*"  Binding="{Binding nameDishDataSet }">
                                 <DataGridTextColumn.HeaderStyle>
@@ -64,7 +64,7 @@
                                     </Style>
                                 </DataGridTextColumn.HeaderStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Цена" Width="*"  Binding="{Binding priceDish }">
+                            <DataGridTextColumn Header="Цена" Width="*"  Binding="{Binding priceDishDataSet}">
                                 <DataGridTextColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
                                         <Setter Property="HorizontalContentAlignment"  Value="Center" />
@@ -73,25 +73,36 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <GroupBox Header="Блюда" HorizontalAlignment="Left" Height="706" Margin="679,8,0,0" VerticalAlignment="Top" Width="277" BorderBrush="#FF0B0B0C">
+                    <GroupBox Header="Блюда" HorizontalAlignment="Left" Height="712" Margin="649,10,0,0" VerticalAlignment="Top" Width="309" BorderBrush="#FF0B0B0C">
                         <Grid Background="#FFF7F0EA" Margin="10,0,0.2,0.4" >
-                            <ComboBox Name="comboxTypeOfDishOrderClient" HorizontalAlignment="Left" Margin="33,67,0,0" VerticalAlignment="Top" Width="180" Height="30"/>
-                            <ListBox Name="listBoxOrderDish"  HorizontalAlignment="Left" Height="470" Margin="21,120,0,0" VerticalAlignment="Top" Width="215" SelectionChanged="listBoxOrderDish_SelectionChanged">
+                            <ComboBox Name="comboxTypeOfDishOrderClient" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="235" Height="36" SelectionChanged="comboxTypeOfDishOrderClient_SelectionChanged"/>
+                            <ListBox Name="listBoxOrderDish"  HorizontalAlignment="Left" Height="533" Margin="0,120,0,0" VerticalAlignment="Top" Width="276" SelectionChanged="listBoxOrderDish_SelectionChanged">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical">
-                                            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-                                                <Button Name="listBoxMenu" Content="{Binding nameDish}"  Click="listBoxMenu_Click" />                                                
+                                            <ScrollViewer x:Name="scrollViewerMenu" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+                                                <Button Name="listBoxMenu"  Click="listBoxMenu_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock x:Name="textblockNameDish" Text="{Binding nameDish}"/>
+                                                        <TextBlock Text="-"/>
+                                                        <TextBlock x:Name="textblockPriceDish" Text="{Binding priceDish}"/>
+                                                        <TextBlock Text="руб."/>
+                                                    </StackPanel>
+                                                </Button>
                                             </ScrollViewer>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                            <Label Content="Вид блюда" HorizontalAlignment="Left" Margin="33,20,0,0" VerticalAlignment="Top"/>
-                            <Button Content="Button" HorizontalAlignment="Left" Margin="33,615,0,0" VerticalAlignment="Top" Width="209"/>
+                            <Label Content="Вид блюда" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top"/>
 
                         </Grid>
                     </GroupBox>
+                    <Label Content="Заказ №" HorizontalAlignment="Left" Margin="239,10,0,0" VerticalAlignment="Top"/>
+                    <TextBlock Name="textblockKeyOrder" HorizontalAlignment="Left" Margin="334,16,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="31" Width="65"/>
+                    <Button Name="buttonCloseOrder" Content="Закрыть заказ" HorizontalAlignment="Left" Margin="492,496,0,0" VerticalAlignment="Top" Width="142" Height="50" Click="buttonCloseOrder_Click"/>
+                    <Label Content="Сумма заказа:" HorizontalAlignment="Left" Margin="11,497,0,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"/>
+                    <TextBlock Name="calculateAmountTextBlock" HorizontalAlignment="Left" Margin="180,506,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="35"/>
                 </Grid>
             </TabItem>
             <TabItem FontSize="20" FontFamily="/Povarenok;component/#Milliard Book" Header="Заказанные блюда" Height="100" Background="#FFC49452" Margin="-2,-6,0,6">

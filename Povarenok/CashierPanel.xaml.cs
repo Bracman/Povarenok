@@ -26,8 +26,18 @@ namespace Povarenok
         {
             public string nameDishDataSet { get; set; }
             public int countDishDataSet { get; set; }
-            public string priceDishDataSet { get; set; }
+            public int priceDishDataSet { get; set; }
         }
+
+
+        public class SomeClass {
+            public static int s;
+
+            public int d;
+
+        }
+
+
 
         public ObservableCollection<DishDataSet> DishDataSets { get; } = new ObservableCollection<DishDataSet>();
 
@@ -38,9 +48,20 @@ namespace Povarenok
             labelTypeDish.IsEnabled = false;
             comboxTypeDish.IsEnabled = false;
             loadTypeofDish();
-            loadDishes();
+            // loadDishes();
             datagridOrder.ItemsSource = DishDataSets;
+            loadKeyOrder();
+            var obj1 = new SomeClass();
+
+            var obj2 = new SomeClass();
+
+            obj1.d = 42;
+
+            obj2.d = 43;
+
+            Console.Write(obj1.d + " " + obj2.d);
         }
+          
 
         private IList<Dates> dates = new List<Dates>();
 
@@ -75,6 +96,16 @@ namespace Povarenok
                            MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        public class TotalAmountItem
+        {
+            public string Name { get; set; }
+            public decimal TotalAmount { get; set; }
+        }
+        private decimal CalculateTotalAmount()
+        {
+            decimal totalAmount = DishDataSets.Sum(item => item.priceDishDataSet*item.countDishDataSet);
+            return totalAmount;
+        }
         public class Dates
         {
             public string inputDates { get; set; }
@@ -86,8 +117,17 @@ namespace Povarenok
             public string nameDish { get; set; }
             public string priceDish { get; set; }
         }
-       
-       
+        private ObservableCollection<TotalAmountItem> TotalAmountItems = new ObservableCollection<TotalAmountItem>();
+        private void AddTotalAmountRowToDataGrid()
+        {
+            // Создайте объект TotalAmountItem с общей суммой
+            decimal totalAmount = CalculateTotalAmount(); // Здесь рассчитайте общую сумму всех блюд, добавленных в DataGrid
+
+            calculateAmountTextBlock.Text = totalAmount.ToString() + " " + "рублей";
+
+           
+            
+        }
 
         private void DishRadioButton_Checked(object sender, RoutedEventArgs e)
         {
@@ -131,7 +171,20 @@ namespace Povarenok
                 datagridProduct.ItemsSource = dataTable.DefaultView;
             }
         }
-        
+         public void loadKeyOrder()
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Rows.Clear();
+            ConnectionDataBase dataBase = new ConnectionDataBase();
+            dataTable = dataBase.StoredProcedureNotParametr("keyOrder");
+            string key="";
+            foreach (DataRow dr in dataTable.Rows)
+            {
+                key = dr[0].ToString();
+
+            }
+            textblockKeyOrder.Text = key.ToString();
+        }
         public void loadTypeofDish()
         {
             try
@@ -220,32 +273,57 @@ namespace Povarenok
                 MessageBox.Show(x.GetBaseException().ToString(), "Error",
                            MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }       
+        }
+
+       
 
         private void listBoxMenu_Click(object sender, RoutedEventArgs e)
         {
             Button clickedButton = (Button)sender;
-            var existingItem = DishDataSets.FirstOrDefault(item => item.nameDishDataSet == clickedButton.Content.ToString());
-            if (existingItem != null)
+
+            // Находим TextBlock по имени внутри кнопки
+            TextBlock nameTextBlock = (TextBlock)clickedButton.FindName("textblockNameDish");
+            TextBlock priceTextBlock = (TextBlock)clickedButton.FindName("textblockPriceDish");
+            // Получаем значения из TextBlock
+            string nameValue = nameTextBlock.Text;
+            string priceValue = priceTextBlock.Text;
+
+
+
+            var existingItem = DishDataSets.FirstOrDefault(item => item.nameDishDataSet == nameValue.ToString() && item.priceDishDataSet==Convert.ToInt32(priceValue));
+           
+            if (datagridOrder.Items.Count<=6)
             {
-                if (existingItem.countDishDataSet <2)
+                if (existingItem != null)
                 {
-                    // Увеличиваем значение второго столбца
-                    existingItem.countDishDataSet++;
-                    CollectionViewSource.GetDefaultView(DishDataSets).Refresh();
+                    if (existingItem.countDishDataSet < 2)
+                    {
+                        // Увеличиваем значение второго столбца
+                        existingItem.countDishDataSet++;
+                        CollectionViewSource.GetDefaultView(DishDataSets).Refresh();
+                        AddTotalAmountRowToDataGrid();
+                    }
+                    else
+                    {
+                        // Показываем сообщение с предупреждением
+                        MessageBox.Show("Нельзя добавить больше двух порций.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
-                    // Показываем сообщение с предупреждением
-                    MessageBox.Show("Нельзя добавить больше двух порций.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    // Создание нового объекта MyDataItem и добавление его в коллекцию MyData
+                    DishDataSet dataSet = new DishDataSet { nameDishDataSet = nameValue, countDishDataSet = 1, priceDishDataSet = Convert.ToInt32(priceValue) };
+                    DishDataSets.Add(dataSet);
                 }
+                CollectionViewSource.GetDefaultView(DishDataSets).Refresh();
+                AddTotalAmountRowToDataGrid();
             }
             else
             {
-                // Создание нового объекта MyDataItem и добавление его в коллекцию MyData
-                DishDataSet dataSet = new DishDataSet { nameDishDataSet = clickedButton.Content.ToString(), countDishDataSet = 1 };
-                DishDataSets.Add(dataSet);
+                MessageBox.Show("Нельзя добавить больше 6 строк.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+                
+            
         }
         private void listBoxOrderDish_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -257,6 +335,58 @@ namespace Povarenok
             }
 
             ((ListBox)sender).SelectedItem = null;
+        }
+
+        private void comboxTypeOfDishOrderClient_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                menuDishes.Clear();
+                DataRowView oDataRowView = comboxTypeOfDishOrderClient.SelectedItem as DataRowView;
+                if (oDataRowView != null)
+
+                {
+                    DataTable dataTable = new DataTable();
+                    dataTable.Rows.Clear();
+                    ConnectionDataBase dataBase = new ConnectionDataBase();
+                    dataTable = dataBase.StoredProcedure("selectDish", "namet", oDataRowView.Row["nameTypeDish"].ToString());
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        menuDishes.Add(new MenuDishes
+                        {
+                            nameDish = dr[0].ToString(),
+                            priceDish = dr[1].ToString()
+                        });
+
+                    }
+                     listBoxOrderDish.ItemsSource = null;
+                     listBoxOrderDish.ItemsSource = menuDishes;
+                }
+
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.GetBaseException().ToString(), "Error",
+                           MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void buttonCloseOrder_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }          
+
+        
+
+        
+
+        private void datagridOrder_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete || e.Key == Key.Back)
+            {
+                calculateAmountTextBlock.Text = "0" + " " + "рублей";
+            }
         }
     }
 }
