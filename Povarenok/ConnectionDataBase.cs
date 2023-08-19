@@ -93,6 +93,29 @@ namespace Povarenok
             }
             return table;
         }
+        public DataTable StoredProcedureWithArray(string nameProcedure, Dictionary<string, object> parameters)
+        {
+
+            MySqlCommand mysqlCommand = new MySqlCommand();
+
+            MySqlDataAdapter sqlAdapter = new MySqlDataAdapter();
+            DataTable table = new DataTable();
+
+            mysqlCommand = new MySqlCommand(nameProcedure, mySql);
+            mysqlCommand.CommandType = CommandType.StoredProcedure;
+            foreach (var parameter in parameters)
+            {
+                mysqlCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
+            }
+
+            mySql.Open();
+            mysqlCommand.ExecuteNonQuery();
+            sqlAdapter.SelectCommand = mysqlCommand;
+            mysqlCommand.Dispose();
+            mySql.Close();
+            return table;
+        }
+
     }
 }
 

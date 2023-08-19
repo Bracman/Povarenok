@@ -2,10 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Povarenok"
         mc:Ignorable="d"
-        Title="CashierPanel" Height="800" Width="1200">
+        Title="CashierPanel" Height="800" Width="1200" Loaded="Window_Loaded">
     <Grid Background="#FFE1D5C9">
         <TabControl HorizontalAlignment="Left" TabStripPlacement="Left" Height="800" VerticalAlignment="Top" Width="1200">
             <TabItem Header="Блюда" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" Margin="-5,-4,0,4">
@@ -48,9 +49,16 @@
             </TabItem>
             <TabItem Header="Заказ клиента" Width="201" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" FontWeight="Bold" Margin="-1,-6,1,6">
                 <Grid Background="#FFF7F0EA" Margin="0,0,0,25">
-                    <DataGrid Name="datagridOrder" HorizontalAlignment="Left" Height="423" Margin="11,54,0,0" AutoGenerateColumns="False" CanUserAddRows="False"  VerticalAlignment="Top" Width="623" PreviewKeyDown="datagridOrder_PreviewKeyDown">
+                    <DataGrid Name="datagridOrder" HorizontalAlignment="Left" Height="423" Margin="11,54,0,0" AutoGenerateColumns="False" CanUserAddRows="False"  VerticalAlignment="Top" Width="538" PreviewKeyDown="datagridOrder_PreviewKeyDown">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Наименование блюда"  Width="*"  Binding="{Binding nameDishDataSet }">
+                            <DataGridTextColumn Header="Наименование блюда"  Width="220"  Binding="{Binding nameDishDataSet }">
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment"  Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Код блюда" Width="*" Binding="{Binding codeDishDataSet}">
                                 <DataGridTextColumn.HeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
                                         <Setter Property="HorizontalContentAlignment"  Value="Center" />
@@ -73,20 +81,22 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <GroupBox Header="Блюда" HorizontalAlignment="Left" Height="712" Margin="649,10,0,0" VerticalAlignment="Top" Width="309" BorderBrush="#FF0B0B0C">
+                    <GroupBox Header="Блюда" HorizontalAlignment="Left" Height="712" Margin="599,10,0,0" VerticalAlignment="Top" Width="359" BorderBrush="#FF0B0B0C">
                         <Grid Background="#FFF7F0EA" Margin="10,0,0.2,0.4" >
                             <ComboBox Name="comboxTypeOfDishOrderClient" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="235" Height="36" SelectionChanged="comboxTypeOfDishOrderClient_SelectionChanged"/>
-                            <ListBox Name="listBoxOrderDish"  HorizontalAlignment="Left" Height="533" Margin="0,120,0,0" VerticalAlignment="Top" Width="276" SelectionChanged="listBoxOrderDish_SelectionChanged">
+                            <ListBox Name="listBoxOrderDish"  HorizontalAlignment="Left" Height="533" Margin="0,120,0,0" VerticalAlignment="Top" Width="319" SelectionChanged="listBoxOrderDish_SelectionChanged">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical">
                                             <ScrollViewer x:Name="scrollViewerMenu" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
                                                 <Button Name="listBoxMenu"  Click="listBoxMenu_Click">
                                                     <StackPanel Orientation="Horizontal">
+                                                        <TextBlock x:Name="textblockCodeDish" Text="{Binding codeDish}" Visibility="Hidden"/>
                                                         <TextBlock x:Name="textblockNameDish" Text="{Binding nameDish}"/>
                                                         <TextBlock Text="-"/>
                                                         <TextBlock x:Name="textblockPriceDish" Text="{Binding priceDish}"/>
                                                         <TextBlock Text="руб."/>
+                                                        <TextBlock Text="123" Visibility="Hidden"/>
                                                     </StackPanel>
                                                 </Button>
                                             </ScrollViewer>
@@ -100,14 +110,70 @@
                     </GroupBox>
                     <Label Content="Заказ №" HorizontalAlignment="Left" Margin="239,10,0,0" VerticalAlignment="Top"/>
                     <TextBlock Name="textblockKeyOrder" HorizontalAlignment="Left" Margin="334,16,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="31" Width="65"/>
-                    <Button Name="buttonCloseOrder" Content="Закрыть заказ" HorizontalAlignment="Left" Margin="492,496,0,0" VerticalAlignment="Top" Width="142" Height="50" Click="buttonCloseOrder_Click"/>
+                    <Button Name="buttonCloseOrder" Content="Закрыть заказ" HorizontalAlignment="Left" Margin="407,491,0,0" VerticalAlignment="Top" Width="142" Height="50" Click="buttonCloseOrder_Click"/>
                     <Label Content="Сумма заказа:" HorizontalAlignment="Left" Margin="11,497,0,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"/>
                     <TextBlock Name="calculateAmountTextBlock" HorizontalAlignment="Left" Margin="180,506,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="35"/>
+                    <TextBlock Name="dateTextBlock" Text="{Binding Source={x:Static sys:DateTime.Today}, StringFormat='{}{0:dd.MM.yyyy}'}" HorizontalAlignment="Left" Margin="24,16,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <TextBlock Name="timeTextBlock" HorizontalAlignment="Left" Margin="492,15,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem FontSize="20" FontFamily="/Povarenok;component/#Milliard Book" Header="Заказанные блюда" Height="100" Background="#FFC49452" Margin="-2,-6,0,6">
                 <Grid Margin="0,0,6,31" Background="#FFF7F0EA" >
-                    <DataGrid HorizontalAlignment="Left" Height="632" Margin="414,10,0,0" VerticalAlignment="Top" Width="525"/>
+                    <DataGrid x:Name="datagridOrdered" HorizontalAlignment="Left" Height="596" Margin="10,157,0,0" VerticalAlignment="Top" Width="954">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер заказа" Width="*">
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment"  Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Наименование блюда" Width="*">
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment"  Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Количество порций" Width="*">
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment"  Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Дата заказа" Width="*">
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment"  Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Стоимость" Width="*">
+                                <DataGridTextColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment"  Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.HeaderStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                        
+                    </DataGrid>
+                    <Label Content="Блюдо" HorizontalAlignment="Left" Margin="455,47,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Дата заказа" HorizontalAlignment="Left" Margin="56,47,0,0" VerticalAlignment="Top"/>
+                    <DatePicker Name="calendar"   HorizontalAlignment="Left" Margin="185,47,0,0" VerticalAlignment="Top" Width="180" FirstDayOfWeek="Monday" SelectedDateFormat="Short" Height="40" Cursor="Hand" DisplayDateStart="2023-08-19"/>
+                    <ComboBox Name="comboboxOrdered" HorizontalAlignment="Left" Margin="540,51,0,0" VerticalAlignment="Top" Width="215"/>
+                    <CheckBox Name="checkboxDishes" HorizontalAlignment="Left" Margin="407,53,0,0" VerticalAlignment="Top" Width="15" Height="14" Checked="checkboxDishes_Checked">
+                        <CheckBox.LayoutTransform>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                        </CheckBox.LayoutTransform>
+                    </CheckBox>
+                    <CheckBox x:Name="checkBoxDate" Content="" HorizontalAlignment="Left" Margin="13,53,0,0" VerticalAlignment="Top" Width="15" Height="14" RenderTransformOrigin="-0.147,0.679" Checked="checkBoxDate_Checked" Unchecked="checkBoxDate_Unchecked">
+                        <CheckBox.LayoutTransform>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                        </CheckBox.LayoutTransform>
+                    </CheckBox>
+                    <Button x:Name="buttonSearchOrdered"  Content="Сформировать" HorizontalAlignment="Left" Margin="784,46,0,0" VerticalAlignment="Top" Width="165" Height="45" Click="buttonSearchOrdered_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

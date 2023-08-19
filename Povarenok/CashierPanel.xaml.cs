@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace Povarenok
 {
@@ -27,6 +28,7 @@ namespace Povarenok
             public string nameDishDataSet { get; set; }
             public int countDishDataSet { get; set; }
             public int priceDishDataSet { get; set; }
+            public int codeDishDataSet { get; set; }
         }
 
 
@@ -48,20 +50,23 @@ namespace Povarenok
             labelTypeDish.IsEnabled = false;
             comboxTypeDish.IsEnabled = false;
             loadTypeofDish();
-            // loadDishes();
             datagridOrder.ItemsSource = DishDataSets;
             loadKeyOrder();
-            var obj1 = new SomeClass();
-
-            var obj2 = new SomeClass();
-
-            obj1.d = 42;
-
-            obj2.d = 43;
-
-            Console.Write(obj1.d + " " + obj2.d);
+            NowTime();
+           
         }
           
+        public void NowTime()
+        {
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += timer_Tick;
+            timer.Start();            
+        }
+        void timer_Tick(object sender, EventArgs e)
+        {
+            timeTextBlock.Text = DateTime.Now.ToShortTimeString();
+        }
 
         private IList<Dates> dates = new List<Dates>();
 
@@ -116,6 +121,8 @@ namespace Povarenok
         {
             public string nameDish { get; set; }
             public string priceDish { get; set; }
+
+            public string codeDish { get; set; }
         }
         private ObservableCollection<TotalAmountItem> TotalAmountItems = new ObservableCollection<TotalAmountItem>();
         private void AddTotalAmountRowToDataGrid()
@@ -123,9 +130,7 @@ namespace Povarenok
             // Создайте объект TotalAmountItem с общей суммой
             decimal totalAmount = CalculateTotalAmount(); // Здесь рассчитайте общую сумму всех блюд, добавленных в DataGrid
 
-            calculateAmountTextBlock.Text = totalAmount.ToString() + " " + "рублей";
-
-           
+            calculateAmountTextBlock.Text = totalAmount.ToString() + " " + "рублей";           
             
         }
 
@@ -255,18 +260,9 @@ namespace Povarenok
                 ConnectionDataBase dataBase = new ConnectionDataBase();
                 dataTable = dataBase.StoredProcedureNotParametr("loadDishes");
 
-                foreach (DataRow dr in dataTable.Rows)
-                {
-                    menuDishes.Add(new MenuDishes
-                    {
-                        nameDish = dr[0].ToString(),
-                        priceDish = dr[1].ToString()
-                    }); 
-
-                }
-                listBoxOrderDish.ItemsSource = null;
-                listBoxOrderDish.ItemsSource = menuDishes;
-
+                comboboxOrdered.ItemsSource = dataTable.DefaultView;
+                comboboxOrdered.DisplayMemberPath = "nameDish";
+                comboboxOrdered.SelectedValuePath = "codeDish";
             }
             catch (Exception x)
             {
@@ -275,22 +271,23 @@ namespace Povarenok
             }
         }
 
-       
-
+        StringBuilder stringBuilder = new StringBuilder();
+        List<string> codeDishes = new List<string>();
         private void listBoxMenu_Click(object sender, RoutedEventArgs e)
         {
             Button clickedButton = (Button)sender;
 
-            // Находим TextBlock по имени внутри кнопки
             TextBlock nameTextBlock = (TextBlock)clickedButton.FindName("textblockNameDish");
             TextBlock priceTextBlock = (TextBlock)clickedButton.FindName("textblockPriceDish");
-            // Получаем значения из TextBlock
+            TextBlock codeTextBlock = (TextBlock)clickedButton.FindName("textblockCodeDish");
+            
             string nameValue = nameTextBlock.Text;
             string priceValue = priceTextBlock.Text;
+            string codeValue = codeTextBlock.Text;
 
+            stringBuilder.Append(string.Join(";", codeDishes));
 
-
-            var existingItem = DishDataSets.FirstOrDefault(item => item.nameDishDataSet == nameValue.ToString() && item.priceDishDataSet==Convert.ToInt32(priceValue));
+            var existingItem = DishDataSets.FirstOrDefault(item => item.nameDishDataSet == nameValue.ToString() && item.priceDishDataSet==Convert.ToInt32(priceValue) && item.codeDishDataSet==Convert.ToInt32(codeValue));
            
             if (datagridOrder.Items.Count<=6)
             {
@@ -302,6 +299,7 @@ namespace Povarenok
                         existingItem.countDishDataSet++;
                         CollectionViewSource.GetDefaultView(DishDataSets).Refresh();
                         AddTotalAmountRowToDataGrid();
+                       
                     }
                     else
                     {
@@ -312,7 +310,7 @@ namespace Povarenok
                 else
                 {
                     // Создание нового объекта MyDataItem и добавление его в коллекцию MyData
-                    DishDataSet dataSet = new DishDataSet { nameDishDataSet = nameValue, countDishDataSet = 1, priceDishDataSet = Convert.ToInt32(priceValue) };
+                    DishDataSet dataSet = new DishDataSet { nameDishDataSet = nameValue, countDishDataSet = 1, priceDishDataSet = Convert.ToInt32(priceValue),codeDishDataSet = Convert.ToInt32(codeValue)};
                     DishDataSets.Add(dataSet);
                 }
                 CollectionViewSource.GetDefaultView(DishDataSets).Refresh();
@@ -321,10 +319,10 @@ namespace Povarenok
             else
             {
                 MessageBox.Show("Нельзя добавить больше 6 строк.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-                
+            }               
             
         }
+       
         private void listBoxOrderDish_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedDate = listBoxOrderDish.SelectedItem as Dates;
@@ -332,9 +330,10 @@ namespace Povarenok
             if (selectedDate != null)
             {
                 datagridOrder.Items.Add(selectedDate);
+               
             }
 
-            ((ListBox)sender).SelectedItem = null;
+            ((ListBox)sender).SelectedItem = null;           
         }
 
         private void comboxTypeOfDishOrderClient_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -355,8 +354,9 @@ namespace Povarenok
                     {
                         menuDishes.Add(new MenuDishes
                         {
-                            nameDish = dr[0].ToString(),
-                            priceDish = dr[1].ToString()
+                            codeDish = dr[0].ToString(),
+                            nameDish = dr[1].ToString(),
+                            priceDish = dr[2].ToString()
                         });
 
                     }
@@ -374,19 +374,86 @@ namespace Povarenok
 
         private void buttonCloseOrder_Click(object sender, RoutedEventArgs e)
         {
-            
-        }          
 
-        
+            List<int> rowDataList = new List<int>();
 
-        
+            // Перебираем строки в DataGrid
+            foreach (var item  in datagridOrder.Items)
+            {
+                DishDataSet dataSet = (DishDataSet)item;
 
+                int codeValues = dataSet.codeDishDataSet;
+                rowDataList.Add(codeValues);
+            }
+
+            string res = string.Join(";", rowDataList);
+
+
+            if (rowDataList.Count > 0)
+            {
+                res += ";";
+            }        
+          
+            decimal totalAmount = CalculateTotalAmount();
+            StringBuilder stringBuilder = new StringBuilder();
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"orderedDishes", res},
+                    {"numOrder",textblockKeyOrder.Text },
+                    {"totalAmount",totalAmount.ToString()},
+                    {"dateOrder",dateTextBlock.Text },
+                    {"timeOrder",timeTextBlock.Text }
+                    
+                };
+            DataTable dataTable = new DataTable();
+            ConnectionDataBase dataBase = new ConnectionDataBase();
+            dataTable = dataBase.StoredProcedureWithArray("insertOrders", parameters);
+        }
         private void datagridOrder_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete || e.Key == Key.Back)
             {
                 calculateAmountTextBlock.Text = "0" + " " + "рублей";
             }
+        }
+
+        private void checkBoxDate_Checked(object sender, RoutedEventArgs e)
+        {
+            calendar.Visibility = Visibility.Visible;
+            calendar.IsEnabled = true;
+        }      
+
+        private void checkBoxDate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            calendar.IsEnabled = false;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            calendar.IsEnabled = false;
+            comboboxOrdered.IsEnabled = false;
+            loadDishes();
+        }
+
+        private void checkboxDishes_Checked(object sender, RoutedEventArgs e)
+        {
+            comboboxOrdered.IsEnabled = true;
+        }
+
+        private void buttonSearchOrdered_Click(object sender, RoutedEventArgs e)
+        {
+            
+            DataTable dataTable = new DataTable();
+            ConnectionDataBase dataBase = new ConnectionDataBase();
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"nameOrdered", calendar.SelectedDate.ToString()},
+                    {"dateOrdered",textblockKeyOrder.Text },
+                   
+                };
+            dataTable = dataBase.StoredProcedureWithArray("loadOrdered", parameters);
+            datagridOrdered.ItemsSource = dataTable.DefaultView;
         }
     }
 }
