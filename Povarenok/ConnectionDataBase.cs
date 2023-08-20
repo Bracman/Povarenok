@@ -13,7 +13,7 @@ namespace Povarenok
 
     class ConnectionDataBase
     {
-        MySqlConnection mySql = new MySqlConnection(@"Server=localhost;Port=3306;UserId=root;Password=123456;Database=db_amoll");
+        MySqlConnection mySql = new MySqlConnection(@"Server=localhost;Port=3306;UserId=admin;Password=78451296;Database=db_amoll");
 
         public void openConnection()
         {
@@ -48,8 +48,6 @@ namespace Povarenok
                 mySqlComm.CommandType = CommandType.StoredProcedure;
                 myadapter.SelectCommand = mySqlComm;
                 myadapter.Fill(table);
-
-
             }
             catch (Exception x)
             {
@@ -78,8 +76,6 @@ namespace Povarenok
                 mySqlComm.ExecuteNonQuery();
                 myadapter.SelectCommand = mySqlComm;
                 myadapter.Fill(table);
-
-
             }
             catch (Exception x)
             {
@@ -98,21 +94,31 @@ namespace Povarenok
 
             MySqlCommand mysqlCommand = new MySqlCommand();
 
-            MySqlDataAdapter sqlAdapter = new MySqlDataAdapter();
+            MySqlDataAdapter mySqlAdapter = new MySqlDataAdapter();
             DataTable table = new DataTable();
-
-            mysqlCommand = new MySqlCommand(nameProcedure, mySql);
-            mysqlCommand.CommandType = CommandType.StoredProcedure;
-            foreach (var parameter in parameters)
+            try
             {
-                mysqlCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                mysqlCommand = new MySqlCommand(nameProcedure, mySql);
+                mysqlCommand.CommandType = CommandType.StoredProcedure;
+                foreach (var parameter in parameters)
+                {
+                    mysqlCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                }
+                mysqlCommand.Connection.Open();
+                mysqlCommand.ExecuteNonQuery();
+                mySqlAdapter.SelectCommand = mysqlCommand;
+                mySqlAdapter.Fill(table);
             }
-
-            mySql.Open();
-            mysqlCommand.ExecuteNonQuery();
-            sqlAdapter.SelectCommand = mysqlCommand;
-            mysqlCommand.Dispose();
-            mySql.Close();
+            catch (Exception x)
+            {
+                MessageBox.Show(x.GetBaseException().ToString(), "Error",
+                           MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                mysqlCommand.Dispose();
+                mySql.Close();
+            }           
             return table;
         }
 

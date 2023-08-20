@@ -419,41 +419,173 @@ namespace Povarenok
 
         private void checkBoxDate_Checked(object sender, RoutedEventArgs e)
         {
-            calendar.Visibility = Visibility.Visible;
-            calendar.IsEnabled = true;
+            startCalendar.Visibility = Visibility.Visible;
+            startCalendar.IsEnabled = true;
+            
         }      
 
         private void checkBoxDate_Unchecked(object sender, RoutedEventArgs e)
         {
-            calendar.IsEnabled = false;
+           startCalendar.IsEnabled = false;
+           endCalendar.IsEnabled = false;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            calendar.IsEnabled = false;
-            comboboxOrdered.IsEnabled = false;
+            ActivatedRadioButtonOrdered();
+            ActivatedRadioButtonUnordered();
             loadDishes();
         }
-
+        
         private void checkboxDishes_Checked(object sender, RoutedEventArgs e)
         {
             comboboxOrdered.IsEnabled = true;
+           
         }
 
         private void buttonSearchOrdered_Click(object sender, RoutedEventArgs e)
         {
+            if(radioButtonOrdered.IsChecked == true)
+            {
+                SearchOrderedDishes();
+            }
+            else
+            {
+                SearchUnorderedDishes();
+            }
+           
+           
+        }
+        private void SearchOrderedDishes()
+        {
+            string code = "0";
+            string startDate = "0";
+            string endDate = "0";
+
+            if (comboboxOrdered.IsEnabled == true && startCalendar.IsEnabled == false && endCalendar.IsEnabled == false)
+            {
+                code = comboboxOrdered.SelectedValue.ToString();
+                startDate = "0";
+                endDate = "0";
+            }
+            else if (comboboxOrdered.IsEnabled == false && startCalendar.IsEnabled == true && endCalendar.IsEnabled == true)
+            {
+                code = "0";
+                startDate = startCalendar.SelectedDate.Value.Date.ToShortDateString();
+                endDate = endCalendar.SelectedDate.Value.Date.ToShortDateString();
+            }
+            else
+            {
+                code = comboboxOrdered.SelectedValue.ToString();
+                startDate = startCalendar.SelectedDate.Value.Date.ToShortDateString();
+                endDate = endCalendar.SelectedDate.Value.Date.ToShortDateString();
+            }
+
             
-            DataTable dataTable = new DataTable();
             ConnectionDataBase dataBase = new ConnectionDataBase();
+
             Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
-                    {"nameOrdered", calendar.SelectedDate.ToString()},
-                    {"dateOrdered",textblockKeyOrder.Text },
-                   
+                    {"codeOrdered", code},
+                    {"startDateOrdered",startDate},
+                    {"endDateOrdered",endDate}
                 };
-            dataTable = dataBase.StoredProcedureWithArray("loadOrdered", parameters);
-            datagridOrdered.ItemsSource = dataTable.DefaultView;
+            DataTable dataTable1 = dataBase.StoredProcedureWithArray("loadOrdered", parameters);
+            datagridOrdered.ItemsSource = dataTable1.DefaultView;
+        }
+        private void  SearchUnorderedDishes()
+        {
+            string cost="min";
+            string startDate="0";
+            string endDate="0";
+
+            if (radioButtonMin.IsChecked == true)
+            {
+                cost = "min";
+                startDate = startDatePeriod.SelectedDate.Value.Date.ToShortDateString();
+                endDate = endDatePeroid.SelectedDate.Value.Date.ToShortDateString();
+            }       
+            else if(radioButtonAvg.IsChecked == true)
+            {
+                cost = "avg";
+                startDate = startDatePeriod.SelectedDate.Value.Date.ToShortDateString();
+                endDate = endDatePeroid.SelectedDate.Value.Date.ToShortDateString();
+            }
+            else
+            {
+                cost = "max";
+                startDate = startDatePeriod.SelectedDate.Value.Date.ToShortDateString();
+                endDate = endDatePeroid.SelectedDate.Value.Date.ToShortDateString();
+            }
+
+            try
+            {
+                    ConnectionDataBase dataBase = new ConnectionDataBase();
+                    Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"cost", cost},
+                    {"startDatePeriod",startDate},
+                    {"endDatePeriod",endDate}
+                };
+                DataTable dataTable1 = dataBase.StoredProcedureWithArray("loadUnorderedDishes", parameters);
+                datagridUnorderedDishes.ItemsSource = dataTable1.DefaultView;
+            }
+            catch(Exception ex)
+            {
+
+                    System.Windows.MessageBox.Show("Не выбрана период времени", "Ошибка формирования отчета",
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+             }
+           
+        }
+        public void  ActivatedRadioButtonOrdered()
+        {
+            startCalendar.IsEnabled = false;
+            endCalendar.IsEnabled = false;
+            comboboxOrdered.IsEnabled = false;
+            gridOrdered.Visibility = Visibility.Hidden;
+            datagridOrdered.Visibility = Visibility.Hidden;
+           
+        }
+        public void ActivatedRadioButtonUnordered()
+        {
+            
+            gridUnordered.Visibility = Visibility.Hidden;
+            radioButtonMin.IsChecked = true;
+            datagridUnorderedDishes.Visibility = Visibility.Hidden;
+            endDatePeroid.IsEnabled = false;
+            radioButtonUnordered.IsChecked = true;
+        }
+
+        private void checkboxDishes_Unchecked(object sender, RoutedEventArgs e)
+        {
+            comboboxOrdered.IsEnabled = false;
+        }
+        private void radioButtonOrdered_Checked(object sender, RoutedEventArgs e)
+        {
+            gridOrdered.Visibility = Visibility.Visible;
+            gridUnordered.Visibility = Visibility.Hidden;
+            datagridOrdered.Visibility = Visibility.Visible;
+            datagridUnorderedDishes.Visibility = Visibility.Hidden;
+        }
+        private void radioButtonUnordered_Checked(object sender, RoutedEventArgs e)
+        {
+            gridOrdered.Visibility = Visibility.Hidden;
+            gridUnordered.Visibility = Visibility.Visible;
+            datagridUnorderedDishes.Visibility = Visibility.Visible;
+            datagridOrdered.Visibility = Visibility.Hidden;
+        }
+        private void startCalendar_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            endCalendar.DisplayDateStart = startCalendar.SelectedDate.Value.Date;
+            endCalendar.IsEnabled = true;
+        }
+
+        private void startDatePeriod_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            endDatePeroid.DisplayDateStart = startDatePeriod.SelectedDate.Value.Date;
+            endDatePeroid.IsEnabled = true;
         }
     }
 }
