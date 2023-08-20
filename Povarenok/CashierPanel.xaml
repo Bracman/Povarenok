@@ -9,7 +9,7 @@
         Title="CashierPanel" Height="800" Width="1200" Loaded="Window_Loaded">
     <Grid Background="#FFE1D5C9">
         <TabControl HorizontalAlignment="Left" TabStripPlacement="Left" Height="800" VerticalAlignment="Top" Width="1200">
-            <TabItem Header="Блюда" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" Margin="-5,-4,0,4">
+            <TabItem Header="Блюда" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" Margin="-5,-4,0,4" Width="219">
                 <Grid Background="#FFF7F0EA" Margin="0,0,-8,22">
                     <GroupBox Header="Поиск" HorizontalAlignment="Left" Height="739" Margin="699,3,0,0" VerticalAlignment="Top" Width="269" BorderBrush="#FF0B0B0C">
                         <Grid HorizontalAlignment="Left" Height="689" Margin="10,10,-2,0" VerticalAlignment="Top" Width="249">
@@ -47,7 +47,7 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Заказ клиента" Width="201" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" FontWeight="Bold" Margin="-1,-6,1,6">
+            <TabItem Header="Заказ клиента" Width="219" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" FontWeight="Bold" Margin="-1,-6,1,6">
                 <Grid Background="#FFF7F0EA" Margin="0,0,0,25">
                     <DataGrid Name="datagridOrder" HorizontalAlignment="Left" Height="423" Margin="11,54,0,0" AutoGenerateColumns="False" CanUserAddRows="False"  VerticalAlignment="Top" Width="538" PreviewKeyDown="datagridOrder_PreviewKeyDown">
                         <DataGrid.Columns>
@@ -219,6 +219,63 @@
 
                 </Grid>
             </TabItem>
+            <TabItem Header="Ингредиенты и Меню" Background="#FFC49452" FontSize="20" FontFamily="/Povarenok;component/#Milliard Book" Height="100" Margin="-2,-6,0,6">
+                <Grid HorizontalAlignment="Left" Height="764" VerticalAlignment="Top" Width="965" Background="#FFF7F0EA">
+                    <TabControl HorizontalAlignment="Left" Height="744" Margin="2,2,0,0" VerticalAlignment="Top" Width="953">
+                        <TabItem Header="Ингредиенты"  Width="472" Background="#FFC49452">
+                            <Grid Background="#FFF7F0EA">
+                                <DataGrid Name="datagridIngredients" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalAlignment="Left" Height="346" Margin="6,347,0,0" VerticalAlignment="Top" Width="937">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Наименование продукта" Width="*" Binding="{Binding nameProduct}"/>
+                                        <DataGridTextColumn Header="Остаток продукта" Width="*" Binding="{Binding balanceProduct}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <GroupBox  HorizontalAlignment="Left" Height="212" Margin="6,121,0,0" VerticalAlignment="Top" Width="931" BorderBrush="Black">
+                                    <Grid HorizontalAlignment="Left" Height="192" Margin="5,10,-2,0" VerticalAlignment="Top" Width="916">
+                                        <Grid Name="gridChangeProduct"  HorizontalAlignment="Left" Height="192" VerticalAlignment="Top" Width="916" Margin="5,9,-5,-9">
+                                            <TextBlock HorizontalAlignment="Left" Margin="35,17,0,0" TextWrapping="Wrap" Text="Наименование продукта" VerticalAlignment="Top"/>
+                                            <TextBox Name="textboxChange" PreviewTextInput="NumberValidationTextBox" MaxLength="3" HorizontalAlignment="Left" Height="30" Margin="344,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115" UndoLimit="3"/>
+                                            <TextBlock HorizontalAlignment="Left" Margin="344,17,0,0" TextWrapping="Wrap" Text="Количество продукта (кг)" VerticalAlignment="Top"/>
+                                            <Button Name="buttonChangeProduct" Content="Изменить" HorizontalAlignment="Left" Margin="159,130,0,0" VerticalAlignment="Top" Width="245" Click="buttonChangeProduct_Click"/>
+                                            <ComboBox Name="comboxIngredient" HorizontalAlignment="Left" Margin="35,60,0,0" VerticalAlignment="Top" Width="227"/>
+                                        </Grid>
+                                        <Grid Name="gridAddProduct"  HorizontalAlignment="Left" Height="192" Margin="5,10,-2,0" VerticalAlignment="Top" Width="916">
+                                            <TextBlock HorizontalAlignment="Left" Margin="35,17,0,0" TextWrapping="Wrap" Text="Наименование продукта" VerticalAlignment="Top"/>
+                                            <TextBox Name="textboxNameProduct" HorizontalAlignment="Left" PreviewTextInput="StringValidationTextBox" MaxLength="50" Height="30" Margin="35,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227" UndoLimit="50"/>
+                                            <TextBox Name="textboxCountProduct" HorizontalAlignment="Left" PreviewTextInput="NumberValidationTextBox" MaxLength="3" Height="30" Margin="344,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115" UndoLimit="3"/>
+                                            <TextBlock HorizontalAlignment="Left" Margin="344,17,0,0" TextWrapping="Wrap" Text="Количество продукта (кг)" VerticalAlignment="Top"/>
+                                            <Button Name="buttonAddProduct" Content="Добавить" HorizontalAlignment="Left" Margin="159,130,0,0" VerticalAlignment="Top" Width="245" Click="buttonAddProduct_Click"/>
+                                        </Grid>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Header="Продукты" HorizontalAlignment="Left" Height="116" VerticalAlignment="Top" Width="198" Margin="13,0,0,0" BorderBrush="Black">
+                                    <Grid HorizontalAlignment="Left" Height="77" Margin="3,0,0,0" VerticalAlignment="Top" Width="182">
+                                        <RadioButton Name="radioButtonAddProduct" Content="Добавить" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Checked="radioButtonAddProduct_Checked"/>
+                                        <RadioButton Name="radioButtonUpdateProduct" Content="Изменить" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="19,38,0,0" VerticalAlignment="Top" Checked="radioButtonUpdateProduct_Checked"/>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Меню" Width="469" Background="#FFC49452">
+                            <Grid Background="#FFF7F0EA">
+                                <DataGrid HorizontalAlignment="Left" Height="416" Margin="10,277,0,0" VerticalAlignment="Top" Width="906">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Наименование блюда" Width="*"/>
+                                        <DataGridTextColumn Header="Цена" Width="*"/>
+                                        <DataGridTextColumn Header="Тип блюда" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <GroupBox Header="" HorizontalAlignment="Left" Height="247" Margin="10,10,0,0" VerticalAlignment="Top" Width="906" BorderBrush="Black">
+                                    <Grid HorizontalAlignment="Left" Height="207" VerticalAlignment="Top" Width="896" Margin="0,0,-2,0">
+                                        
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+
         </TabControl>
 
     </Grid>

@@ -15,6 +15,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+using System.Text.RegularExpressions;
 
 namespace Povarenok
 {
@@ -436,6 +437,8 @@ namespace Povarenok
             ActivatedRadioButtonOrdered();
             ActivatedRadioButtonUnordered();
             loadDishes();
+            loadIngredients();
+            gridAddProduct.Visibility = Visibility.Hidden;
         }
         
         private void checkboxDishes_Checked(object sender, RoutedEventArgs e)
@@ -523,11 +526,11 @@ namespace Povarenok
             {
                     ConnectionDataBase dataBase = new ConnectionDataBase();
                     Dictionary<string, object> parameters = new Dictionary<string, object>
-                {
-                    {"cost", cost},
-                    {"startDatePeriod",startDate},
-                    {"endDatePeriod",endDate}
-                };
+                   {
+                      {"cost", cost},
+                      {"startDatePeriod",startDate},
+                      {"endDatePeriod",endDate}
+                   };
                 DataTable dataTable1 = dataBase.StoredProcedureWithArray("loadUnorderedDishes", parameters);
                 datagridUnorderedDishes.ItemsSource = dataTable1.DefaultView;
             }
@@ -556,6 +559,24 @@ namespace Povarenok
             datagridUnorderedDishes.Visibility = Visibility.Hidden;
             endDatePeroid.IsEnabled = false;
             radioButtonUnordered.IsChecked = true;
+        }
+      
+        private void loadIngredients()
+        {
+            DataTable dataTable = new DataTable();
+            ConnectionDataBase dataBase = new ConnectionDataBase();
+            dataTable = dataBase.StoredProcedureNotParametr("loadProducts");
+            datagridIngredients.ItemsSource = dataTable.DefaultView;
+
+
+            DataTable dataTable1 = new DataTable();
+            
+            dataTable1 = dataBase.StoredProcedureNotParametr("loadProducts");
+            comboxIngredient.ItemsSource = dataTable1.DefaultView;
+            comboxIngredient.DisplayMemberPath = "nameProduct";
+            comboxIngredient.SelectedValuePath = "";
+
+
         }
 
         private void checkboxDishes_Unchecked(object sender, RoutedEventArgs e)
@@ -586,6 +607,66 @@ namespace Povarenok
         {
             endDatePeroid.DisplayDateStart = startDatePeriod.SelectedDate.Value.Date;
             endDatePeroid.IsEnabled = true;
+        }
+
+        private void radioButtonAddProduct_Checked(object sender, RoutedEventArgs e)
+        {
+            gridAddProduct.Visibility = Visibility.Visible;
+            gridChangeProduct.Visibility = Visibility.Hidden;
+        }
+
+        private void radioButtonUpdateProduct_Checked(object sender, RoutedEventArgs e)
+        {
+            gridChangeProduct.Visibility = Visibility.Visible;
+            gridAddProduct.Visibility = Visibility.Hidden;
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+        private void StringValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            
+            Regex regex = new Regex("[^[а-яА-Я]");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void buttonAddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectionDataBase dataBase = new ConnectionDataBase();
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"productName", textboxNameProduct.Text},
+                    {"countProduct",textboxCountProduct.Text},                    
+                };
+            DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertProduct", parameters);
+            textboxCountProduct.Text="";
+            textboxNameProduct.Text="";
+            loadIngredients();
+            
+        }
+
+        private void buttonChangeProduct_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectionDataBase dataBase = new ConnectionDataBase();
+
+            DataRowView oDataRowView = comboxIngredient.SelectedItem as DataRowView;
+
+            if(oDataRowView != null)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    {"nameIngredients",  oDataRowView.Row["nameProduct"].ToString()},
+                    {"countIngredients",textboxChange.Text},
+                };
+                DataTable dataTable1 = dataBase.StoredProcedureWithArray("updateProducts", parameters);
+                textboxCountProduct.Text = "";
+                textboxChange.Text = "";
+                loadIngredients();
+            }
+                
         }
     }
 }
