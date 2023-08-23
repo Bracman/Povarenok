@@ -13,7 +13,7 @@ namespace Povarenok
 
     class ConnectionDataBase
     {
-        MySqlConnection mySql = new MySqlConnection(@"Server=localhost;Port=3306;UserId=admin;Password=78451296;Database=db_amoll");
+        MySqlConnection mySql = new MySqlConnection(@"Server=localhost;Port=3306;UserId=root;Password=123456;Database=db_amoll");
 
         public void openConnection()
         {
