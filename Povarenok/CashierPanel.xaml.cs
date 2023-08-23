@@ -208,6 +208,10 @@ namespace Povarenok
                 comboxTypeOfDishOrderClient.ItemsSource = dataTable.DefaultView;
                 comboxTypeOfDishOrderClient.DisplayMemberPath = "nameTypeDish";
                 comboxTypeOfDishOrderClient.SelectedValuePath = "codeTypeDish";
+
+                comboboxTypeDishAddMenu.ItemsSource = dataTable.DefaultView;
+                comboboxTypeDishAddMenu.DisplayMemberPath = "nameTypeDish";
+                comboboxTypeDishAddMenu.SelectedValuePath = "codeTypeDish";
             }
             catch (Exception x)
             {
@@ -437,8 +441,9 @@ namespace Povarenok
             ActivatedRadioButtonOrdered();
             ActivatedRadioButtonUnordered();
             loadDishes();
-            loadIngredients();
+            loadDataForElement();
             gridAddProduct.Visibility = Visibility.Hidden;
+            ActivateMenu();
         }
         
         private void checkboxDishes_Checked(object sender, RoutedEventArgs e)
@@ -561,12 +566,14 @@ namespace Povarenok
             radioButtonUnordered.IsChecked = true;
         }
       
-        private void loadIngredients()
+        private void loadDataForElement()
         {
             DataTable dataTable = new DataTable();
             ConnectionDataBase dataBase = new ConnectionDataBase();
             dataTable = dataBase.StoredProcedureNotParametr("loadProducts");
             datagridIngredients.ItemsSource = dataTable.DefaultView;
+
+           
 
 
             DataTable dataTable1 = new DataTable();
@@ -576,7 +583,17 @@ namespace Povarenok
             comboxIngredient.DisplayMemberPath = "nameProduct";
             comboxIngredient.SelectedValuePath = "";
 
+            comboxProductAddMenu.ItemsSource = dataTable.DefaultView;
+            comboxProductAddMenu.DisplayMemberPath = "nameProduct";
+            comboxProductAddMenu.SelectedValuePath = "numberProduct";
 
+            dataTable1 = dataBase.StoredProcedureNotParametr("loadDishForProducts");
+            comboxDishes.ItemsSource = dataTable1.DefaultView;
+            comboxDishes.DisplayMemberPath = "nameDish";
+            comboxDishes.SelectedValuePath = "codeDish";
+
+            dataTable1 = dataBase.StoredProcedureNotParametr("loadDishWithProduct");
+            gridProduct.ItemsSource = dataTable1.DefaultView;
         }
 
         private void checkboxDishes_Unchecked(object sender, RoutedEventArgs e)
@@ -644,7 +661,7 @@ namespace Povarenok
             DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertProduct", parameters);
             textboxCountProduct.Text="";
             textboxNameProduct.Text="";
-            loadIngredients();
+            loadDataForElement();
             
         }
 
@@ -664,9 +681,87 @@ namespace Povarenok
                 DataTable dataTable1 = dataBase.StoredProcedureWithArray("updateProducts", parameters);
                 textboxCountProduct.Text = "";
                 textboxChange.Text = "";
-                loadIngredients();
+                loadDataForElement();
             }
                 
+        }
+        private void ActivateMenu()
+        {
+            gridAddMenuDishes.Visibility = Visibility.Hidden;
+            gridchangeMenuDishes.Visibility = Visibility.Hidden;
+            gridAddProductsInDish.Visibility = Visibility.Hidden;
+            gridAddDish.Visibility = Visibility.Hidden;
+        }
+
+        private void addMenuDishes_Checked(object sender, RoutedEventArgs e)
+        {
+            gridAddMenuDishes.Visibility = Visibility.Visible;
+        }
+
+        private void radioButtonAddProductDishes_Checked(object sender, RoutedEventArgs e)
+        {
+            gridAddProductsInDish.Visibility = Visibility.Visible;
+            gridAddDish.Visibility = Visibility.Hidden;
+        }
+
+        private void radioButtonAddDishes_Checked(object sender, RoutedEventArgs e)
+        {
+            gridAddProductsInDish.Visibility = Visibility.Hidden;
+            gridAddDish.Visibility = Visibility = Visibility.Visible;
+        }
+
+        private void addDishInMenu_Click(object sender, RoutedEventArgs e)
+        {
+            try {
+                ConnectionDataBase dataBase = new ConnectionDataBase();
+
+                string codeTypeDish = comboboxTypeDishAddMenu.SelectedValue.ToString();
+
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                 {
+                     {"dishName",  textboxNameAddMenu.Text},
+                     {"dishPrice",textboxPriceAddMenu.Text},
+                     {"typeDishCode",codeTypeDish}
+                 };
+                DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertDishInMenu", parameters);
+                
+                string message = dataTable1.Rows[0][0].ToString();
+                
+                MessageBox.Show(message, "Уведомление",
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception x)
+            {
+                
+            } 
+        }
+
+        private void buttonAddProductInDish_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ConnectionDataBase dataBase = new ConnectionDataBase();
+
+                string codeProduct = comboxProductAddMenu.SelectedValue.ToString();
+                string codeDish = comboxDishes.SelectedValue.ToString();
+
+              
+
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                 {
+                     {"dishCode",  codeDish},
+                     {"productNum",codeProduct},
+                     {"productCount",textboxProductAddMenu.Text}
+                 };
+                DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertProductInDish", parameters);
+
+                loadDataForElement();
+            }
+            catch (Exception x)
+            {
+
+            }
+
         }
     }
 }

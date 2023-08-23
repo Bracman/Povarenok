@@ -29,7 +29,6 @@
                             <Button Name="activateSearch" Content="Найти" HorizontalAlignment="Left" Margin="25,649,0,0" VerticalAlignment="Top" Width="185" Click="activateSearch_Click"/>
                             <Label Name="labelTypeDish" Content="Вид блюда" HorizontalAlignment="Left" Margin="16,78,0,0" VerticalAlignment="Top"/>
                             <ComboBox Name="comboxTypeDish" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" Width="226" SelectionChanged="comboxTypeDish_SelectionChanged"/>
-
                         </Grid>
                     </GroupBox>
                     <DataGrid Name="dataGrid" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="659" Margin="39,32,0,0" AutoGenerateColumns="False" VerticalAlignment="Top" Width="630">
@@ -239,7 +238,7 @@
                                             <Button Name="buttonChangeProduct" Content="Изменить" HorizontalAlignment="Left" Margin="159,130,0,0" VerticalAlignment="Top" Width="245" Click="buttonChangeProduct_Click"/>
                                             <ComboBox Name="comboxIngredient" HorizontalAlignment="Left" Margin="35,60,0,0" VerticalAlignment="Top" Width="227"/>
                                         </Grid>
-                                        <Grid Name="gridAddProduct"  HorizontalAlignment="Left" Height="192" Margin="5,10,-2,0" VerticalAlignment="Top" Width="916">
+                                        <Grid Name="gridAddProduct"  HorizontalAlignment="Left" Height="192" Margin="5,10,-2,0" VerticalAlignment="Top" Width="916" d:IsHidden="True">
                                             <TextBlock HorizontalAlignment="Left" Margin="35,17,0,0" TextWrapping="Wrap" Text="Наименование продукта" VerticalAlignment="Top"/>
                                             <TextBox Name="textboxNameProduct" HorizontalAlignment="Left" PreviewTextInput="StringValidationTextBox" MaxLength="50" Height="30" Margin="35,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227" UndoLimit="50"/>
                                             <TextBox Name="textboxCountProduct" HorizontalAlignment="Left" PreviewTextInput="NumberValidationTextBox" MaxLength="3" Height="30" Margin="344,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115" UndoLimit="3"/>
@@ -268,39 +267,63 @@
                                 <GroupBox Header="" HorizontalAlignment="Left" Height="596" Margin="10,106,0,0" VerticalAlignment="Top" Width="906" BorderBrush="Black">
                                     <Grid HorizontalAlignment="Left" Height="360" VerticalAlignment="Top" Width="896">
                                         <Grid x:Name="gridAddMenuDishes" Margin="0,0,0,-209">
-                                            <Label  Content="Наименование блюда" Margin="10,0,661,171"/>
-                                            <TextBox HorizontalAlignment="Left" Margin="10,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="219" Height="30"/>
-                                            <Label  Content="Вид блюда" Margin="291,5,486,526"/>
-                                            <ComboBox HorizontalAlignment="Left" Margin="267,48,0,0" VerticalAlignment="Top" Width="191"/>
-                                            <Label  Content="Цена блюда" Margin="479,0,280,171"/>
-                                            <TextBox HorizontalAlignment="Left" Margin="479,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" Height="30"/>
-                                            <Label  Content="рублей" Margin="644,45,171,126"/>
+                                            <Grid Name="gridAddDish" HorizontalAlignment="Left" Height="153" Margin="29,71,0,0" VerticalAlignment="Top" Width="857" d:IsHidden="True">
+                                                <Label  Content="Наименование блюда" Margin="21,4,595,107" RenderTransformOrigin="0.5,0.5"/>
+                                                <TextBox Name="textboxNameAddMenu" PreviewTextInput="StringValidationTextBox"  HorizontalAlignment="Left" Margin="27,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="219" Height="30"/>
+                                                <Label  Content="Вид блюда" Margin="287,1,460,113" RenderTransformOrigin="0.5,0.513"/>
+                                                <ComboBox Name="comboboxTypeDishAddMenu" HorizontalAlignment="Left" Margin="275,43,0,0" VerticalAlignment="Top" Width="191"/>
+                                                <Label  Content="Цена блюда" Margin="496,4,219,115" RenderTransformOrigin="0.5,0.5"/>
+                                                <TextBox  Name="textboxPriceAddMenu"  MaxLength="3" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Margin="485,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" Height="30"/>
+                                                <Label  Content="руб." Margin="643,104,196,427"/>
+                                                <Button x:Name="addDishInMenu" Content="Добавить" HorizontalAlignment="Left" Margin="289,87,0,0" VerticalAlignment="Top" Width="162" Height="40" Click="addDishInMenu_Click"/>
+                                            </Grid>
+                                            <RadioButton Name="radioButtonAddDishes" Content="Добавить блюдо" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="30,23,0,0" VerticalAlignment="Top" Width="205" Checked="radioButtonAddDishes_Checked"/>
+                                            <RadioButton Name="radioButtonAddProductDishes" Content="Добавить продукты в блюда" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="395,23,0,0" VerticalAlignment="Top" Checked="radioButtonAddProductDishes_Checked"/>
+
+                                            <Grid Name="gridAddProductsInDish" HorizontalAlignment="Left" Height="411" Margin="10,147,0,0" VerticalAlignment="Top" Width="860">
+                                                <Button Name="buttonAddProductInDish" Content="Добавить продукт" HorizontalAlignment="Left" Margin="543,100,0,0" VerticalAlignment="Top" Width="194" Height="40" Click="buttonAddProductInDish_Click"/>
+                                                <Label  Content="Наименование продукта" Margin="19,57,597,307"/>
+                                                <Label  Content="Количество продукта" Margin="295,55,359,303"/>
+                                                <DataGrid Name="gridProduct" HorizontalAlignment="Left" AutoGenerateColumns="False" CanUserAddRows="False" Height="258" Margin="16,149,0,0" VerticalAlignment="Top" Width="719">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Header="Наименование блюда" Width="*" Binding="{Binding nameDish}"/>
+                                                        <DataGridTextColumn Header="Наименование продукта" Width="*" Binding="{Binding nameProduct}"/>
+                                                        <DataGridTextColumn Header="Вес продукта(грамм)" Width="*" Binding="{Binding productWeight}"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                                <TextBox Name="textboxProductAddMenu" HorizontalAlignment="Left" MaxLength="3" PreviewTextInput="NumberValidationTextBox" Margin="300,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" Height="35"/>
+                                                <ComboBox Name="comboxProductAddMenu" HorizontalAlignment="Left" Margin="20,107,0,0" VerticalAlignment="Top" Width="238"/>
+                                                <ComboBox Name="comboxDishes" HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Width="238"/>
+                                                <Label  Content="Наименование блюда" Margin="268,9,345,355"/>
+                                            </Grid>
                                         </Grid>
-                                        <Grid x:Name="gridchangeMenuDishes" Margin="0,0,0,-209">
+                                        <Grid x:Name="gridchangeMenuDishes" Margin="0,0,0,-209" d:IsHidden="True">
                                             <Label  Content="Наименование блюда" Margin="10,0,661,535"/>
                                             <ComboBox HorizontalAlignment="Left" Margin="14,48,0,0" VerticalAlignment="Top" Width="212"/>
                                             <Label  Content="Цена блюда" Margin="479,0,280,526"/>
                                             <TextBox HorizontalAlignment="Left" Margin="479,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" Height="30"/>
                                             <Label  Content="рублей" Margin="644,45,171,491"/>
-                                            <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}" Margin="75,200,107,81"/>
                                             <TextBox HorizontalAlignment="Left" Margin="363,127,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" Height="30"/>
                                             <ComboBox HorizontalAlignment="Left" Margin="22,128,0,0" VerticalAlignment="Top" Width="238"/>
                                             <Label  Content="Наименование продукта" Margin="22,88,630,447"/>
-                                            <Label  Content="Количество продукта" Margin="359,89,307,446"/>
+                                            <Label  Content="Количество продукта" Margin="359,89,326,446"/>
 
                                         </Grid>
                                     </Grid>
                                 </GroupBox>
-                                <Button Content="Добавить продукт" HorizontalAlignment="Left" Margin="622,247,0,0" VerticalAlignment="Top" Width="194" Height="40"/>
+
                                 <GroupBox Header="Меню" BorderBrush="Black" Margin="10,0,564,602">
                                     <Grid>
-                                        <RadioButton x:Name="addMenuDishes" Content="Добавить блюдо" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="21,4,0,0" VerticalAlignment="Top" FontSize="18"/>
+                                        <RadioButton x:Name="addMenuDishes" Content="Добавить блюдо" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="21,4,0,0" VerticalAlignment="Top" FontSize="18" Checked="addMenuDishes_Checked"/>
                                         <RadioButton x:Name="changeMenuDishes" Content="Изменить меню" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Margin="21,43,0,0" VerticalAlignment="Top" FontSize="18"/>
                                         <RadioButton x:Name="changeMenuDishes_Copy" Content="Просмотр меню" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Margin="194,0,0,0" VerticalAlignment="Center" Width="160" FontSize="18"/>
-
                                     </Grid>
                                 </GroupBox>
-                                <Button Content="Добавить" HorizontalAlignment="Left" Margin="358,627,0,0" VerticalAlignment="Top" Width="162" Height="52"/>
+
+
+
+
+
                             </Grid>
                         </TabItem>
                     </TabControl>
