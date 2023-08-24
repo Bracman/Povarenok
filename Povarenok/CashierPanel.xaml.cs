@@ -55,7 +55,6 @@ namespace Povarenok
 
             public string codeDish { get; set; }
         }
-
         public ObservableCollection<DishDataSet> DishDataSets { get; } = new ObservableCollection<DishDataSet>();
 
         public CashierPanel()
@@ -79,7 +78,7 @@ namespace Povarenok
         }
         void timer_Tick(object sender, EventArgs e)
         {
-            timeTextBlock.Text = DateTime.Now.ToShortTimeString();
+            timeTextBlock.Text = DateTime.Now.ToLongTimeString();
         }
 
         private IList<Dates> dates = new List<Dates>();
@@ -138,7 +137,8 @@ namespace Povarenok
             datagridProduct.Visibility = Visibility.Visible;
             dataGrid.Visibility = Visibility.Hidden;
             labelTypeDish.IsEnabled = true;
-            comboxTypeDish.IsEnabled = true;            
+            comboxTypeDish.IsEnabled = true;     
+            
         }
 
         private void activateSearch_Click(object sender, RoutedEventArgs e)
@@ -172,6 +172,7 @@ namespace Povarenok
             foreach (DataRow dr in dataTable.Rows)
             {
                 key = dr[0].ToString();
+
             }
             textblockKeyOrder.Text = key.ToString();
         }
@@ -181,8 +182,7 @@ namespace Povarenok
             {
                 loadDataForCombobox(comboxTypeDish, "selectTypeDish", "", "nameTypeDish", "codeTypeDish");
                 loadDataForCombobox(comboxTypeOfDishOrderClient, "selectTypeDish", "", "nameTypeDish", "codeTypeDish");
-                loadDataForCombobox(comboboxTypeDishAddMenu, "selectTypeDish", "", "nameTypeDish", "codeTypeDish");
-  
+                loadDataForCombobox(comboboxTypeDishAddMenu, "selectTypeDish", "", "nameTypeDish", "codeTypeDish");  
             }
             catch (Exception x)
             {
@@ -246,8 +246,7 @@ namespace Povarenok
                 dataTable.Rows.Clear();
                 ConnectionDataBase dataBase = new ConnectionDataBase();
                 dataTable = dataBase.StoredProcedureNotParametr("loadDishes");
-                loadDataForCombobox(comboboxOrdered, "loadDishes", "", "nameDish", "codeDish");
-               
+                loadDataForCombobox(comboboxOrdered, "loadDishes", "", "nameDish", "codeDish");               
             }
             catch (Exception x)
             {
@@ -356,30 +355,33 @@ namespace Povarenok
         private void buttonCloseOrder_Click(object sender, RoutedEventArgs e)
         {
 
-            List<int> rowDataList = new List<int>();
-          
+            List<int> codeDishList = new List<int>();
+            List<int> countDishList = new List<int>();
+            
             foreach (var item  in datagridOrder.Items)
             {
                 DishDataSet dataSet = (DishDataSet)item;
 
                 int codeValues = dataSet.codeDishDataSet;
-                rowDataList.Add(codeValues);
+                int countValues = dataSet.countDishDataSet;
+                countDishList.Add(countValues);
+                codeDishList.Add(codeValues);
             }
-
-            string res = string.Join(";", rowDataList);
-
-
-            if (rowDataList.Count > 0)
+            string pointCodeList = string.Join(";", codeDishList);
+            string pointCountList = string.Join(";", countDishList);
+            if (codeDishList.Count > 0 & countDishList.Count > 0)
             {
-                res += ";";
-            }        
+                pointCodeList += ";";
+                pointCountList += ";";
+            }
           
             decimal totalAmount = CalculateTotalAmount();
             StringBuilder stringBuilder = new StringBuilder();
             Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
-                    {"orderedDishes", res},
+                    {"orderedDishes", pointCodeList},
                     {"numOrder",textblockKeyOrder.Text },
+                    {"dishCount",pointCountList },
                     {"totalAmount",totalAmount.ToString()},
                     {"dateOrder",dateTextBlock.Text },
                     {"timeOrder",timeTextBlock.Text }
@@ -434,8 +436,7 @@ namespace Povarenok
             else
             {
                 SearchUnorderedDishes();
-            }           
-           
+            }                      
         }
         private void SearchOrderedDishes()
         {
@@ -461,7 +462,6 @@ namespace Povarenok
                 startDate = startCalendar.SelectedDate.Value.Date.ToShortDateString();
                 endDate = endCalendar.SelectedDate.Value.Date.ToShortDateString();
             }
-
             
             ConnectionDataBase dataBase = new ConnectionDataBase();
 
@@ -498,7 +498,6 @@ namespace Povarenok
                 startDate = startDatePeriod.SelectedDate.Value.Date.ToShortDateString();
                 endDate = endDatePeroid.SelectedDate.Value.Date.ToShortDateString();
             }
-
             try
             {
                     ConnectionDataBase dataBase = new ConnectionDataBase();
@@ -513,7 +512,6 @@ namespace Povarenok
             }
             catch(Exception ex)
             {
-
                     System.Windows.MessageBox.Show("Не выбрана период времени", "Ошибка формирования отчета",
                                 MessageBoxButton.OK, MessageBoxImage.Warning);
              }
@@ -621,7 +619,6 @@ namespace Povarenok
         }
         private void StringValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            
             Regex regex = new Regex("[^[а-яА-Я]");
             e.Handled = regex.IsMatch(e.Text);
         }
@@ -699,7 +696,6 @@ namespace Povarenok
                 
                 if(textboxDishWeight.Text!="" & textboxPriceAddMenu.Text!="" & textboxNameAddMenu.Text!="")
                 {
-
                     string codeTypeDish = comboboxTypeDishAddMenu.SelectedValue.ToString();
 
                     Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -737,8 +733,6 @@ namespace Povarenok
                     string codeProduct = comboxProductAddMenu.SelectedValue.ToString();
                     string codeDish = comboxDishes.SelectedValue.ToString();
 
-
-
                     Dictionary<string, object> parameters = new Dictionary<string, object>
                  {
                      {"dishCode",  codeDish},
@@ -767,7 +761,6 @@ namespace Povarenok
             if(textboxChangePrice.Text!="" && comboxChangeDish.Text!="")
             {
                 ConnectionDataBase dataBase = new ConnectionDataBase();
-
                
                 string codeDish = comboxChangeDish.SelectedValue.ToString();
                 string priceDish = textboxChangePrice.Text;
