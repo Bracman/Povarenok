@@ -60,35 +60,7 @@ namespace Povarenok
                 mySql.Close();
             }
             return table;
-        }
-        public DataTable StoredProcedure(string nameProcedure, string nameParametr,string nameValue)
-        {
-            MySqlCommand mySqlComm = new MySqlCommand();
-
-            MySqlDataAdapter myadapter = new MySqlDataAdapter();
-            DataTable table = new DataTable();
-            try
-            {
-                mySqlComm = new MySqlCommand(nameProcedure, mySql);
-                mySqlComm.CommandType = CommandType.StoredProcedure;
-                mySqlComm.Parameters.AddWithValue(nameParametr,nameValue);
-                mySqlComm.Connection.Open();
-                mySqlComm.ExecuteNonQuery();
-                myadapter.SelectCommand = mySqlComm;
-                myadapter.Fill(table);
-            }
-            catch (Exception x)
-            {
-                MessageBox.Show(x.GetBaseException().ToString(), "Error",
-                           MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                mySqlComm.Dispose();
-                mySql.Close();
-            }
-            return table;
-        }
+        }      
         public DataTable StoredProcedureWithArray(string nameProcedure, Dictionary<string, object> parameters)
         {
 
