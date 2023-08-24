@@ -272,10 +272,12 @@
                                                 <TextBox Name="textboxNameAddMenu" PreviewTextInput="StringValidationTextBox"  HorizontalAlignment="Left" Margin="27,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="219" Height="30"/>
                                                 <Label  Content="Вид блюда" Margin="287,1,460,113" RenderTransformOrigin="0.5,0.513"/>
                                                 <ComboBox Name="comboboxTypeDishAddMenu" HorizontalAlignment="Left" Margin="275,43,0,0" VerticalAlignment="Top" Width="191"/>
-                                                <Label  Content="Цена блюда" Margin="496,4,219,115" RenderTransformOrigin="0.5,0.5"/>
-                                                <TextBox  Name="textboxPriceAddMenu"  MaxLength="3" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Margin="485,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" Height="30"/>
+                                                <Label  Content="Цена блюда" Margin="701,4,14,115" RenderTransformOrigin="0.5,0.5"/>
+                                                <TextBox  Name="textboxPriceAddMenu"  MaxLength="3" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Margin="690,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" Height="30"/>
                                                 <Label  Content="руб." Margin="643,104,196,427"/>
                                                 <Button x:Name="addDishInMenu" Content="Добавить" HorizontalAlignment="Left" Margin="289,87,0,0" VerticalAlignment="Top" Width="162" Height="40" Click="addDishInMenu_Click"/>
+                                                <Label  Content="Вес блюда (грамм)" Margin="502,4,172,115" RenderTransformOrigin="0.5,0.5"/>
+                                                <TextBox Name="textboxDishWeight" HorizontalAlignment="Left" Margin="502,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="159"/>
                                             </Grid>
                                             <RadioButton Name="radioButtonAddDishes" Content="Добавить блюдо" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="30,23,0,0" VerticalAlignment="Top" Width="205" Checked="radioButtonAddDishes_Checked"/>
                                             <RadioButton Name="radioButtonAddProductDishes" Content="Добавить продукты в блюда" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="395,23,0,0" VerticalAlignment="Top" Checked="radioButtonAddProductDishes_Checked"/>
@@ -307,8 +309,8 @@
                                             <ComboBox HorizontalAlignment="Left" Margin="22,128,0,0" VerticalAlignment="Top" Width="238"/>
                                             <Label  Content="Наименование продукта" Margin="22,88,630,447"/>
                                             <Label  Content="Количество продукта" Margin="359,89,326,446"/>
-
                                         </Grid>
+
                                     </Grid>
                                 </GroupBox>
 
@@ -316,7 +318,6 @@
                                     <Grid>
                                         <RadioButton x:Name="addMenuDishes" Content="Добавить блюдо" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="21,4,0,0" VerticalAlignment="Top" FontSize="18" Checked="addMenuDishes_Checked"/>
                                         <RadioButton x:Name="changeMenuDishes" Content="Изменить меню" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Margin="21,43,0,0" VerticalAlignment="Top" FontSize="18"/>
-                                        <RadioButton x:Name="changeMenuDishes_Copy" Content="Просмотр меню" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Margin="194,0,0,0" VerticalAlignment="Center" Width="160" FontSize="18"/>
                                     </Grid>
                                 </GroupBox>
 

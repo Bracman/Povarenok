@@ -715,20 +715,28 @@ namespace Povarenok
             try {
                 ConnectionDataBase dataBase = new ConnectionDataBase();
 
-                string codeTypeDish = comboboxTypeDishAddMenu.SelectedValue.ToString();
+                
+                if(textboxDishWeight.Text!="" & textboxPriceAddMenu.Text!="" & textboxNameAddMenu.Text!="")
+                {
 
-                Dictionary<string, object> parameters = new Dictionary<string, object>
-                 {
+                    string codeTypeDish = comboboxTypeDishAddMenu.SelectedValue.ToString();
+
+                    Dictionary<string, object> parameters = new Dictionary<string, object>
+                    {
                      {"dishName",  textboxNameAddMenu.Text},
                      {"dishPrice",textboxPriceAddMenu.Text},
+                     {"weightDish",textboxDishWeight.Text },
                      {"typeDishCode",codeTypeDish}
-                 };
-                DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertDishInMenu", parameters);
+                    };
+                    DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertDishInMenu", parameters);
+
+                    string message = dataTable1.Rows[0][0].ToString();
+
+                    MessageBox.Show(message, "Уведомление",
+                                   MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
                 
-                string message = dataTable1.Rows[0][0].ToString();
-                
-                MessageBox.Show(message, "Уведомление",
-                               MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception x)
             {
@@ -740,22 +748,33 @@ namespace Povarenok
         {
             try
             {
-                ConnectionDataBase dataBase = new ConnectionDataBase();
 
-                string codeProduct = comboxProductAddMenu.SelectedValue.ToString();
-                string codeDish = comboxDishes.SelectedValue.ToString();
+                if(comboxProductAddMenu.Text!="" && comboxDishes.Text!="")
+                {
+                    ConnectionDataBase dataBase = new ConnectionDataBase();
 
-              
+                    string codeProduct = comboxProductAddMenu.SelectedValue.ToString();
+                    string codeDish = comboxDishes.SelectedValue.ToString();
 
-                Dictionary<string, object> parameters = new Dictionary<string, object>
+
+
+                    Dictionary<string, object> parameters = new Dictionary<string, object>
                  {
                      {"dishCode",  codeDish},
                      {"productNum",codeProduct},
                      {"productCount",textboxProductAddMenu.Text}
                  };
-                DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertProductInDish", parameters);
+                    DataTable dataTable1 = dataBase.StoredProcedureWithArray("insertProductInDish", parameters);
 
-                loadDataForElement();
+                    string messageDatebase = dataTable1.Rows[0][0].ToString();
+
+                    MessageBox.Show(messageDatebase, "Уведомление",
+                                   MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    loadDataForElement();
+                }
+
+                
             }
             catch (Exception x)
             {
