@@ -222,7 +222,7 @@ namespace Povarenok
                     {
                         dates.Add(new Dates
                         {
-                            inputDates = dr[0].ToString()
+                            inputDates = dr[1].ToString()
                         });
 
                     }
@@ -246,7 +246,7 @@ namespace Povarenok
                 dataTable.Rows.Clear();
                 ConnectionDataBase dataBase = new ConnectionDataBase();
                 dataTable = dataBase.StoredProcedureNotParametr("loadDishes");
-                loadDataForCombobox(comboboxOrdered, "loadDishes", "", "nameDish", "codeDish");               
+                loadDataForCombobox(comboboxOrdered, "selectTypeDish", "", "nameTypeDish", "codeTypeDish");               
             }
             catch (Exception x)
             {

@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Povarenok"
         mc:Ignorable="d"
-        Title="CashierPanel" Height="800" Width="1200" Loaded="Window_Loaded">
+        Title="Поваренок" Height="800" Width="1200" Loaded="Window_Loaded" Icon="/cheif-ico.png">
     <Grid Background="#FFE1D5C9">
         <TabControl HorizontalAlignment="Left" TabStripPlacement="Left" Height="800" VerticalAlignment="Top" Width="1200">
             <TabItem Header="Блюда" Height="100" FontFamily="/Povarenok;component/#Milliard Book" FontSize="20" Background="#FFC49452" Margin="-5,-4,0,4" Width="219">
@@ -167,7 +167,7 @@
                     </GroupBox>
                     <GroupBox Header="Фильтр по поиску блюд" HorizontalAlignment="Left" Height="221" Margin="10,141,0,0" VerticalAlignment="Top" Width="954" BorderBrush="#FF050505">
                         <Grid HorizontalAlignment="Left" Height="176" Margin="0,10,-2.4,-0.4" VerticalAlignment="Top" Width="944">
-                            <Grid x:Name="gridUnordered" HorizontalAlignment="Left" Height="183" Margin="10,-7,0,0" VerticalAlignment="Top" Width="924">
+                            <Grid x:Name="gridUnordered" HorizontalAlignment="Left" Height="183" Margin="10,-7,0,0" VerticalAlignment="Top" Width="924" d:IsHidden="True">
                                 <Label Content="от" HorizontalAlignment="Left" Margin="248,47,0,0" VerticalAlignment="Top" FontSize="18"/>
                                 <DatePicker Name="startDatePeriod" Focusable="False" HorizontalAlignment="Left" Margin="283,48,0,0" VerticalAlignment="Top" Width="161" SelectedDateChanged="startDatePeriod_SelectedDateChanged"/>
                                 <DatePicker Name="endDatePeroid" Focusable="False" HorizontalAlignment="Left" Margin="512,48,0,0" VerticalAlignment="Top" Width="161"/>
@@ -204,11 +204,11 @@
                                     </CheckBox.LayoutTransform>
                                 </CheckBox>
                                 <ComboBox Name="comboboxOrdered" HorizontalAlignment="Left" Margin="534,51,0,0" VerticalAlignment="Top" Width="350" />
-                                <Label Content="Блюдо" HorizontalAlignment="Left" Margin="588,10,0,0" VerticalAlignment="Top" FontSize="18"/>
+                                <Label Content="Вид блюда" HorizontalAlignment="Left" Margin="588,10,0,0" VerticalAlignment="Top" FontSize="18"/>
                             </Grid>
                         </Grid>
                     </GroupBox>
-                    <DataGrid Name="datagridUnorderedDishes" CanUserAddRows="False" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="366" Margin="10,381,0,0" VerticalAlignment="Top" Width="954">
+                    <DataGrid Name="datagridUnorderedDishes" CanUserAddRows="False" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="366" Margin="10,381,0,0" VerticalAlignment="Top" Width="954" d:IsHidden="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Наименование блюда" Width="*" Binding="{Binding nameDish}"/>
                             <DataGridTextColumn Header="Цена блюда" Width="*" Binding="{Binding priceDish}"/>
@@ -332,8 +332,6 @@
                                         <RadioButton x:Name="changeMenuDishes" Content="Изменить меню" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Margin="21,43,0,0" VerticalAlignment="Top" FontSize="18" Checked="changeMenuDishes_Checked"/>
                                     </Grid>
                                 </GroupBox>
-
-
                             </Grid>
                         </TabItem>
                     </TabControl>
