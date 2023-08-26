@@ -563,9 +563,9 @@ namespace Povarenok
 
             DataTable dataTable1 = new DataTable();
            
-            loadDataForCombobox(comboxIngredient, "loadDishForProducts","", "nameDish", "codeDish");
+            loadDataForCombobox(comboxIngredient, "loadProducts", "", "nameProduct", "codeDish");
            
-            loadDataForCombobox(comboxProductAddMenu, "loadDishForProducts","", "nameDish", "codeDish");
+            loadDataForCombobox(comboxProductAddMenu, "loadProducts", "", "nameProduct", "codeDish");
            
             loadDataForCombobox(comboxDishes, "loadDishForProducts", "", "nameDish", "codeDish");         
 
@@ -796,7 +796,7 @@ namespace Povarenok
         {
             gridchangeMenuDishes.Visibility = Visibility.Visible;
             radioButtonAddDishes.Visibility = Visibility.Hidden;
-            radioButtonAddProduct.Visibility = Visibility.Hidden;
+            radioButtonAddProduct.Visibility = Visibility.Visible;
             radioButtonAddProductDishes.Visibility = Visibility.Hidden;
             radioButtonChangeDish.Visibility = Visibility.Visible;
             radioButtonDeleteDish.Visibility = Visibility.Visible;

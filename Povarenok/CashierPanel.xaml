@@ -238,7 +238,7 @@
                                             <Button Name="buttonChangeProduct" Content="Изменить" HorizontalAlignment="Left" Margin="159,130,0,0" VerticalAlignment="Top" Width="245" Click="buttonChangeProduct_Click"/>
                                             <ComboBox Name="comboxIngredient" HorizontalAlignment="Left" Margin="35,60,0,0" VerticalAlignment="Top" Width="227"/>
                                         </Grid>
-                                        <Grid Name="gridAddProduct"  HorizontalAlignment="Left" Height="192" Margin="5,10,-2,0" VerticalAlignment="Top" Width="916" d:IsHidden="True">
+                                        <Grid Name="gridAddProduct"  HorizontalAlignment="Left" Height="192" Margin="5,10,-2,0" VerticalAlignment="Top" Width="916">
                                             <TextBlock HorizontalAlignment="Left" Margin="35,17,0,0" TextWrapping="Wrap" Text="Наименование продукта" VerticalAlignment="Top"/>
                                             <TextBox Name="textboxNameProduct" HorizontalAlignment="Left" PreviewTextInput="StringValidationTextBox" MaxLength="50" Height="30" Margin="35,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227" UndoLimit="50"/>
                                             <TextBox Name="textboxCountProduct" HorizontalAlignment="Left" PreviewTextInput="NumberValidationTextBox" MaxLength="3" Height="30" Margin="344,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115" UndoLimit="3"/>
@@ -282,7 +282,7 @@
                                             <RadioButton Name="radioButtonAddDishes" Content="Добавить блюдо" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="30,23,0,0" VerticalAlignment="Top" Width="205" Checked="radioButtonAddDishes_Checked"/>
                                             <RadioButton Name="radioButtonAddProductDishes" Content="Добавить продукты в блюда" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="395,23,0,0" VerticalAlignment="Top" Checked="radioButtonAddProductDishes_Checked"/>
 
-                                            <Grid Name="gridAddProductsInDish" HorizontalAlignment="Left" Height="411" Margin="10,147,0,0" VerticalAlignment="Top" Width="860" d:IsHidden="True">
+                                            <Grid Name="gridAddProductsInDish" HorizontalAlignment="Left" Height="411" Margin="10,147,0,0" VerticalAlignment="Top" Width="860">
                                                 <Button Name="buttonAddProductInDish" Content="Добавить продукт" HorizontalAlignment="Left" Margin="543,100,0,0" VerticalAlignment="Top" Width="194" Height="40" Click="buttonAddProductInDish_Click"/>
                                                 <Label  Content="Наименование продукта" Margin="19,57,597,307"/>
                                                 <Label  Content="Количество продукта" Margin="295,55,359,303"/>
@@ -299,7 +299,7 @@
                                                 <Label  Content="Наименование блюда" Margin="268,9,345,355"/>
                                             </Grid>
                                         </Grid>
-                                        <Grid x:Name="gridchangeMenuDishes" Margin="0,0,0,-209" d:IsHidden="True">
+                                        <Grid x:Name="gridchangeMenuDishes" Margin="0,0,0,-209">
                                             <DataGrid Name="dataGridBoardDishes" AutoGenerateColumns="False" CanUserAddRows="False" Margin="26,250,179,10">
                                                 <DataGrid.Columns>
                                                     <DataGridTextColumn Header="Наименование блюда" Width="*" Binding="{Binding nameDish}"/>
