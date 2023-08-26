@@ -390,6 +390,11 @@ namespace Povarenok
             DataTable dataTable = new DataTable();
             ConnectionDataBase dataBase = new ConnectionDataBase();
             dataTable = dataBase.StoredProcedureWithArray("insertOrders", parameters);
+
+            calculateAmountTextBlock.Text = "0" + " " + "рублей";
+            DishDataSets.Clear();
+            loadKeyOrder();
+
         }
         private void datagridOrder_PreviewKeyDown(object sender, KeyEventArgs e)
         {
