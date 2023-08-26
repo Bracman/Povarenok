@@ -25,24 +25,24 @@ namespace Povarenok
     /// </summary>
     public partial class CashierPanel : Window
     {
-       public class DishDataSet
+       public class DishDataSet// класс для хранения заказа
         {
             public string nameDishDataSet { get; set; }
             public int countDishDataSet { get; set; }
             public int priceDishDataSet { get; set; }
             public int codeDishDataSet { get; set; }
         }
-        public class TotalAmountItem
+        public class TotalAmountItem//класс для подсчета суммы заказа
         {
             public string Name { get; set; }
             public decimal TotalAmount { get; set; }
         }
-        private decimal CalculateTotalAmount()
+        private decimal CalculateTotalAmount()//Вычисляет сумму заказа
         {
             decimal totalAmount = DishDataSets.Sum(item => item.priceDishDataSet * item.countDishDataSet);
             return totalAmount;
         }
-        public class Dates
+        public class Dates// класс для передачи данных в лист бокс 
         {
             public string inputDates { get; set; }
             public bool IsSelected { get; set; }
@@ -55,9 +55,9 @@ namespace Povarenok
 
             public string codeDish { get; set; }
         }
-        public ObservableCollection<DishDataSet> DishDataSets { get; } = new ObservableCollection<DishDataSet>();
+        public ObservableCollection<DishDataSet> DishDataSets { get; } = new ObservableCollection<DishDataSet>(); //создает коллекцию данных для класс  DishDataSet
 
-        public CashierPanel()
+        public CashierPanel()//Загружает программу
         {
             InitializeComponent();
 
@@ -69,23 +69,23 @@ namespace Povarenok
             NowTime();           
         }
           
-        public void NowTime()
+        public void NowTime()// Метод для работы с временем
         {
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timer_Tick;
             timer.Start();            
         }
-        void timer_Tick(object sender, EventArgs e)
+        void timer_Tick(object sender, EventArgs e)//Выводит время в тексбокс
         {
             timeTextBlock.Text = DateTime.Now.ToLongTimeString();
         }
 
-        private IList<Dates> dates = new List<Dates>();
+        private IList<Dates> dates = new List<Dates>(); //Коллеция для заполнения данных в листбокс
 
         private IList<MenuDishes> menuDishes = new List<MenuDishes>();
         
-        public void  loadProducts()
+        public void  loadProducts()//метод загружает продукты в листбокс вкладки "Блюда"
         {
             try
             {
@@ -114,7 +114,7 @@ namespace Povarenok
             }
         }
        
-        private ObservableCollection<TotalAmountItem> TotalAmountItems = new ObservableCollection<TotalAmountItem>();
+        private ObservableCollection<TotalAmountItem> TotalAmountItems = new ObservableCollection<TotalAmountItem>();//Коллеция для хранения суммы заказа
         private void AddTotalAmountRowToDataGrid()
         {           
             decimal totalAmount = CalculateTotalAmount(); 
@@ -122,7 +122,7 @@ namespace Povarenok
             
         }
 
-        private void DishRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void DishRadioButton_Checked(object sender, RoutedEventArgs e)//Радиокнопка "Блюда" в вкладке "Блюда"
         {
             loadProducts();
             datagridProduct.Visibility = Visibility.Hidden;
@@ -132,7 +132,7 @@ namespace Povarenok
             activateSearch.IsEnabled = true;
         }
 
-        private void ProductRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void ProductRadioButton_Checked(object sender, RoutedEventArgs e)//Радиокнопка "Продукты" в вкладке "Блюда"
         {
             datagridProduct.Visibility = Visibility.Visible;
             dataGrid.Visibility = Visibility.Hidden;
@@ -141,7 +141,7 @@ namespace Povarenok
             
         }
 
-        private void activateSearch_Click(object sender, RoutedEventArgs e)
+        private void activateSearch_Click(object sender, RoutedEventArgs e) //Кнопка Найти в вкладке"Блюда"
         {
             var selectedPassages = dates.Where(ps => ps.IsSelected == true).ToList();
             string message="";
@@ -162,7 +162,7 @@ namespace Povarenok
                 datagridProduct.ItemsSource = dataTable.DefaultView;
             }
         }
-         public void loadKeyOrder()
+         public void loadKeyOrder()// Метод получает последний номер заказа из бд.
         {
             DataTable dataTable = new DataTable();
             dataTable.Rows.Clear();
@@ -176,7 +176,7 @@ namespace Povarenok
             }
             textblockKeyOrder.Text = key.ToString();
         }
-        public void loadTypeofDish()
+        public void loadTypeofDish()// Загружает типы блюд в комбобоксы для программы
         {
             try
             {
@@ -192,7 +192,7 @@ namespace Povarenok
 
         }
 
-        DataTable  singleStreamFilling(string nameProcedure,string nameParametr,string inputDate)
+        DataTable  singleStreamFilling(string nameProcedure,string nameParametr,string inputDate)// Метод для получения из бд данных с одним параметром
         {
             DataTable dataTable = new DataTable();
             ConnectionDataBase dataBase = new ConnectionDataBase();
@@ -205,7 +205,7 @@ namespace Povarenok
             return dataTable;
         }
 
-        private void comboxTypeDish_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void comboxTypeDish_SelectionChanged(object sender, SelectionChangedEventArgs e)//При нажатии на элемент комбокс в вкладке "Блюда" выводит выводит блюда
         {
             try
             {
@@ -237,7 +237,7 @@ namespace Povarenok
                            MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        public void loadDishes()
+        public void loadDishes()// Загружает блюда во вкладке "Заказ клиента"
         {
             try
             {
@@ -257,7 +257,7 @@ namespace Povarenok
 
         StringBuilder stringBuilder = new StringBuilder();
         List<string> codeDishes = new List<string>();
-        private void listBoxMenu_Click(object sender, RoutedEventArgs e)
+        private void listBoxMenu_Click(object sender, RoutedEventArgs e)// По нажатию в листобокс во вкладке "Заказ клиента" проверяет кол-во блюда и общее количество блюда
         {
             Button clickedButton = (Button)sender;
 
@@ -306,7 +306,7 @@ namespace Povarenok
             
         }
        
-        private void listBoxOrderDish_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void listBoxOrderDish_SelectionChanged(object sender, SelectionChangedEventArgs e)// Выбранный элемент в листобоксе во вкладке "Заказ клиента" отправляет в таблицу
         {
             var selectedDate = listBoxOrderDish.SelectedItem as Dates;
 
@@ -319,7 +319,7 @@ namespace Povarenok
             ((ListBox)sender).SelectedItem = null;           
         }
 
-        private void comboxTypeOfDishOrderClient_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void comboxTypeOfDishOrderClient_SelectionChanged(object sender, SelectionChangedEventArgs e)//При нажатии на элемент комбокс в вкладке "Заказ клиента" выводит выводит блюда
         {
             try
             {
@@ -352,7 +352,7 @@ namespace Povarenok
             }
         }
 
-        private void buttonCloseOrder_Click(object sender, RoutedEventArgs e)
+        private void buttonCloseOrder_Click(object sender, RoutedEventArgs e)//При нажатии на кнопку "Закрыть заказ " отправляет данные в бд
         {
 
             
@@ -401,7 +401,7 @@ namespace Povarenok
            
 
         }
-        private void datagridOrder_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void datagridOrder_PreviewKeyDown(object sender, KeyEventArgs e)// При удаление данных в таблицы во вкладке "заказы клиента " при нажатии Delete обновляет сумму заказа
         {
             if (e.Key == Key.Delete || e.Key == Key.Back)
             {
@@ -448,7 +448,7 @@ namespace Povarenok
                 SearchUnorderedDishes();
             }                      
         }
-        private void SearchOrderedDishes()
+        private void SearchOrderedDishes()// Метод для поиска блюд в зависимости от периода и типа блюд
         {
             string code = "0";
             string startDate = "0";
@@ -484,7 +484,7 @@ namespace Povarenok
             DataTable dataTable1 = dataBase.StoredProcedureWithArray("loadOrdered", parameters);
             datagridOrdered.ItemsSource = dataTable1.DefaultView;
         }
-        private void  SearchUnorderedDishes()
+        private void  SearchUnorderedDishes()// метод незаказнных блюд в зависимости от стоимости блюда
         {
             string cost="min";
             string startDate="0";
@@ -527,7 +527,7 @@ namespace Povarenok
              }
            
         }
-        public void  ActivatedRadioButtonOrdered()
+        public void  ActivatedRadioButtonOrdered()// радиокнопка для активации заказанных блюд
         {
             startCalendar.IsEnabled = false;
             endCalendar.IsEnabled = false;
@@ -536,7 +536,7 @@ namespace Povarenok
             datagridOrdered.Visibility = Visibility.Hidden;
            
         }
-        public void ActivatedRadioButtonUnordered()
+        public void ActivatedRadioButtonUnordered()// радиокнопка для активации незаказанных блюд
         {
             
             gridUnordered.Visibility = Visibility.Hidden;
@@ -554,7 +554,7 @@ namespace Povarenok
             comboBox.DisplayMemberPath = nameDisplayValue;
             comboBox.SelectedValuePath = nameSelectedvalue;
         }
-        private void loadDataForElement()
+        private void loadDataForElement() // метод для загрузки данных в комбоксы во вкладке "Заказы" и "Меню и ингредиенты"
         {
             DataTable dataTable = new DataTable();
             ConnectionDataBase dataBase = new ConnectionDataBase();
@@ -581,59 +581,60 @@ namespace Povarenok
                        
         }
 
-        private void checkboxDishes_Unchecked(object sender, RoutedEventArgs e)
+        private void checkboxDishes_Unchecked(object sender, RoutedEventArgs e)// Проверяет выбран ли блюдо в вкладке "Заказы" для модуля "Заказанные"
         {
             comboboxOrdered.IsEnabled = false;
         }
-        private void radioButtonOrdered_Checked(object sender, RoutedEventArgs e)
+        private void radioButtonOrdered_Checked(object sender, RoutedEventArgs e) // радиокнопка "Заказанные" активирует модуль для поиска заказанных блюд 
         {
             gridOrdered.Visibility = Visibility.Visible;
             gridUnordered.Visibility = Visibility.Hidden;
             datagridOrdered.Visibility = Visibility.Visible;
             datagridUnorderedDishes.Visibility = Visibility.Hidden;
         }
-        private void radioButtonUnordered_Checked(object sender, RoutedEventArgs e)
+        private void radioButtonUnordered_Checked(object sender, RoutedEventArgs e)// радиокнопка "Незаказанные" активирует модуль для поиска незаказанных блюд        
         {
             gridOrdered.Visibility = Visibility.Hidden;
             gridUnordered.Visibility = Visibility.Visible;
             datagridUnorderedDishes.Visibility = Visibility.Visible;
             datagridOrdered.Visibility = Visibility.Hidden;
         }
-        private void startCalendar_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void startCalendar_SelectedDateChanged(object sender, SelectionChangedEventArgs e)// Получает данные календаря  для начало период 
         {
             endCalendar.DisplayDateStart = startCalendar.SelectedDate.Value.Date;
             endCalendar.IsEnabled = true;
         }
 
-        private void startDatePeriod_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void startDatePeriod_SelectedDateChanged(object sender, SelectionChangedEventArgs e)// Получает данные календаря  для конец периода
         {
             endDatePeroid.DisplayDateStart = startDatePeriod.SelectedDate.Value.Date;
             endDatePeroid.IsEnabled = true;
         }
 
-        private void radioButtonAddProduct_Checked(object sender, RoutedEventArgs e)
+        private void radioButtonAddProduct_Checked(object sender, RoutedEventArgs e)// Радиокнопка "Добавить продукты" активирует окно добавления
         {
             gridAddProduct.Visibility = Visibility.Visible;
             gridChangeProduct.Visibility = Visibility.Hidden;
         }
 
-        private void radioButtonUpdateProduct_Checked(object sender, RoutedEventArgs e)
+        private void radioButtonUpdateProduct_Checked(object sender, RoutedEventArgs e)// Радиокнопка "Изменить продукты" активирует окно изменение
         {
             gridChangeProduct.Visibility = Visibility.Visible;
             gridAddProduct.Visibility = Visibility.Hidden;
         }
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)//Метод проверки входных данных для тексбокс, в которую вводят числа
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
-        private void StringValidationTextBox(object sender, TextCompositionEventArgs e)
+        private void StringValidationTextBox(object sender, TextCompositionEventArgs e)//Метод проверки входных данных для тексбокс, в которую вводят ТЕКСТ
         {
+            
             Regex regex = new Regex("[^[а-яА-Я]");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void buttonAddProduct_Click(object sender, RoutedEventArgs e)
+        private void buttonAddProduct_Click(object sender, RoutedEventArgs e)// Добавляет данные продукта в таблицу и обновляет таблицу
         {
             ConnectionDataBase dataBase = new ConnectionDataBase();
 
@@ -648,7 +649,7 @@ namespace Povarenok
             loadDataForElement();            
         }
 
-        private void buttonChangeProduct_Click(object sender, RoutedEventArgs e)
+        private void buttonChangeProduct_Click(object sender, RoutedEventArgs e) //Кнопка изменяет данные продукта и обновляет таблицу
         {
             ConnectionDataBase dataBase = new ConnectionDataBase();
 
@@ -667,7 +668,7 @@ namespace Povarenok
                 loadDataForElement();
             }                
         }
-        private void ActivateMenu()
+        private void ActivateMenu()// Метод для работы Вкладки "Меню" во вкладки "Меню и ингредиенты"
         {
             gridAddMenuDishes.Visibility = Visibility.Hidden;
             gridchangeMenuDishes.Visibility = Visibility.Hidden;
@@ -677,7 +678,7 @@ namespace Povarenok
             gridChangeDish.Visibility = Visibility.Hidden;
         }
 
-        private void addMenuDishes_Checked(object sender, RoutedEventArgs e)
+        private void addMenuDishes_Checked(object sender, RoutedEventArgs e) // Радиокнопка для активирует модуль добавления блюд
         {
             gridAddMenuDishes.Visibility = Visibility.Visible;
             radioButtonAddProductDishes.Visibility = Visibility.Visible;
@@ -687,19 +688,19 @@ namespace Povarenok
             gridchangeMenuDishes.Visibility = Visibility.Hidden;
         }
 
-        private void radioButtonAddProductDishes_Checked(object sender, RoutedEventArgs e)
+        private void radioButtonAddProductDishes_Checked(object sender, RoutedEventArgs e)// Радиокнопка для добавления продукта в блюдо
         {
             gridAddProductsInDish.Visibility = Visibility.Visible;
             gridAddDish.Visibility = Visibility.Hidden;
         }
 
-        private void radioButtonAddDishes_Checked(object sender, RoutedEventArgs e)
+        private void radioButtonAddDishes_Checked(object sender, RoutedEventArgs e) // Радиокнопка для активирует  окно добавления блюда
         {
             gridAddProductsInDish.Visibility = Visibility.Hidden;
             gridAddDish.Visibility = Visibility = Visibility.Visible;
         }
 
-        private void addDishInMenu_Click(object sender, RoutedEventArgs e)
+        private void addDishInMenu_Click(object sender, RoutedEventArgs e)// Кнопка для добавляет блюдо в меню 
         {
             try {
                   ConnectionDataBase dataBase = new ConnectionDataBase();
@@ -731,7 +732,7 @@ namespace Povarenok
             } 
         }
 
-        private void buttonAddProductInDish_Click(object sender, RoutedEventArgs e)
+        private void buttonAddProductInDish_Click(object sender, RoutedEventArgs e) //Добавляет продукт в блюдо и обновляет таблицу продуктов у блюд
         {
             try
             {
@@ -766,7 +767,7 @@ namespace Povarenok
 
         }
 
-        private void buttonChangeDish_Click(object sender, RoutedEventArgs e)
+        private void buttonChangeDish_Click(object sender, RoutedEventArgs e) // Кнопка для изменение цены у блюд
         {
             if(textboxChangePrice.Text!="" && comboxChangeDish.Text!="")
             {
@@ -792,7 +793,7 @@ namespace Povarenok
             }
         }
 
-        private void changeMenuDishes_Checked(object sender, RoutedEventArgs e)
+        private void changeMenuDishes_Checked(object sender, RoutedEventArgs e) // Кнопка для перехода на модуль удаление/измениен блюд
         {
             gridchangeMenuDishes.Visibility = Visibility.Visible;
             radioButtonAddDishes.Visibility = Visibility.Hidden;
@@ -803,14 +804,14 @@ namespace Povarenok
             gridAddMenuDishes.Visibility = Visibility.Hidden;
         }
 
-        private void radioButtonChangeDish_Checked(object sender, RoutedEventArgs e)
+        private void radioButtonChangeDish_Checked(object sender, RoutedEventArgs e) // нопка для перехода на модуль для изменение блюд
         {
             gridDeleteDish.Visibility = Visibility.Hidden;
             gridChangeDish.Visibility = Visibility.Hidden;
             gridChangeDish.Visibility = Visibility.Visible;
         }
 
-        private void buttonDeleteDish_Click(object sender, RoutedEventArgs e)
+        private void buttonDeleteDish_Click(object sender, RoutedEventArgs e) // Кнопка удаляет блюдо из меню
         {
             if(comboboxDishDelete.Text!="")
             {

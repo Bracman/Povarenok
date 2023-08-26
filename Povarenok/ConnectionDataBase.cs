@@ -15,7 +15,7 @@ namespace Povarenok
     {
         MySqlConnection mySql = new MySqlConnection(@"Server=localhost;Port=3306;UserId=root;Password=123456;Database=db_amoll");
 
-        public void openConnection()
+        public void openConnection()// Открывает канал для подключения к бд 
         {
             if (mySql.State == System.Data.ConnectionState.Closed)
             {
@@ -36,7 +36,7 @@ namespace Povarenok
             return mySql;
         }
 
-        public DataTable StoredProcedureNotParametr(string nameProcedure)
+        public DataTable StoredProcedureNotParametr(string nameProcedure)// получения данных из БД без параметров
         {
             MySqlCommand mySqlComm = new MySqlCommand();
 
@@ -61,7 +61,7 @@ namespace Povarenok
             }
             return table;
         }      
-        public DataTable StoredProcedureWithArray(string nameProcedure, Dictionary<string, object> parameters)
+        public DataTable StoredProcedureWithArray(string nameProcedure, Dictionary<string, object> parameters)//Отравка данных в Mysql c n-количество параметром
         {
 
             MySqlCommand mysqlCommand = new MySqlCommand();
