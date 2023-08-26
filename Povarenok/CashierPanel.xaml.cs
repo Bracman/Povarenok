@@ -355,45 +355,50 @@ namespace Povarenok
         private void buttonCloseOrder_Click(object sender, RoutedEventArgs e)
         {
 
-            List<int> codeDishList = new List<int>();
-            List<int> countDishList = new List<int>();
             
-            foreach (var item  in datagridOrder.Items)
-            {
-                DishDataSet dataSet = (DishDataSet)item;
+            
+                List<int> codeDishList = new List<int>();
+                List<int> countDishList = new List<int>();
 
-                int codeValues = dataSet.codeDishDataSet;
-                int countValues = dataSet.countDishDataSet;
-                countDishList.Add(countValues);
-                codeDishList.Add(codeValues);
-            }
-            string pointCodeList = string.Join(";", codeDishList);
-            string pointCountList = string.Join(";", countDishList);
-            if (codeDishList.Count > 0 & countDishList.Count > 0)
-            {
-                pointCodeList += ";";
-                pointCountList += ";";
-            }
-          
-            decimal totalAmount = CalculateTotalAmount();
-            StringBuilder stringBuilder = new StringBuilder();
-            Dictionary<string, object> parameters = new Dictionary<string, object>
+                foreach (var item in datagridOrder.Items)
+                {
+                    DishDataSet dataSet = (DishDataSet)item;
+
+                    int codeValues = dataSet.codeDishDataSet;
+                    int countValues = dataSet.countDishDataSet;
+                    countDishList.Add(countValues);
+                    codeDishList.Add(codeValues);
+                }
+                string pointCodeList = string.Join(";", codeDishList);
+                string pointCountList = string.Join(";", countDishList);
+                if (codeDishList.Count > 0 & countDishList.Count > 0)
+                {
+                    pointCodeList += ";";
+                    pointCountList += ";";
+                }
+
+                decimal totalAmount = CalculateTotalAmount();
+                StringBuilder stringBuilder = new StringBuilder();
+                Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
                     {"orderedDishes", pointCodeList},
-                    {"numOrder",textblockKeyOrder.Text },
+                    {"numOrder",textblockKeyOrder.Text.ToString()},
                     {"dishCount",pointCountList },
                     {"totalAmount",totalAmount.ToString()},
                     {"dateOrder",dateTextBlock.Text },
                     {"timeOrder",timeTextBlock.Text }
-                    
-                };
-            DataTable dataTable = new DataTable();
-            ConnectionDataBase dataBase = new ConnectionDataBase();
-            dataTable = dataBase.StoredProcedureWithArray("insertOrders", parameters);
 
-            calculateAmountTextBlock.Text = "0" + " " + "рублей";
-            DishDataSets.Clear();
-            loadKeyOrder();
+                };
+                DataTable dataTable = new DataTable();
+                ConnectionDataBase dataBase = new ConnectionDataBase();
+                dataTable = dataBase.StoredProcedureWithArray("insertOrders", parameters);
+
+                calculateAmountTextBlock.Text = "0" + " " + "рублей";
+                DishDataSets.Clear();
+                loadKeyOrder();
+            
+           
+           
 
         }
         private void datagridOrder_PreviewKeyDown(object sender, KeyEventArgs e)

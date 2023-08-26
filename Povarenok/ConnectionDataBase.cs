@@ -49,7 +49,7 @@ namespace Povarenok
                 myadapter.SelectCommand = mySqlComm;
                 myadapter.Fill(table);
             }
-            catch (Exception x)
+            catch (MySqlException x)
             {
                 MessageBox.Show(x.GetBaseException().ToString(), "Error",
                            MessageBoxButton.OK, MessageBoxImage.Error);
@@ -81,10 +81,20 @@ namespace Povarenok
                 mySqlAdapter.SelectCommand = mysqlCommand;
                 mySqlAdapter.Fill(table);
             }
-            catch (Exception x)
+            catch (MySqlException x)
             {
-                MessageBox.Show(x.GetBaseException().ToString(), "Error",
-                           MessageBoxButton.OK, MessageBoxImage.Error);
+                if (x.Number == 1062)
+                {
+                    MessageBox.Show("Заказ сформирован успешно");
+                }
+                else
+                {
+                    MessageBox.Show(x.GetBaseException().ToString(), "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+
+             
             }
             finally
             {
